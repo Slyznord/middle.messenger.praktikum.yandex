@@ -13,5 +13,16 @@
 
   <body>
     <div id="app"></div>
+
+    <!--  TODO: Временный блок для удобства просмотра сверстаных страниц, после удалить  -->
+    <nav style="display: flex; flex-direction: column; position: fixed; right: 30px; bottom: 30px; padding: 16px 24px; box-shadow: 0 0 5px #000; background: #FFF;">
+      <ul style="list-style-type: none;">
+        <li style="cursor: pointer;"><a onclick="window.goTo('Auth')">Auth</a></li>
+        <li style="cursor: pointer;"><a onclick="window.goTo('ErrorPage')">Error Page</a></li>
+        <li style="cursor: pointer;"><a onclick="window.goTo('Home')">Home</a></li>
+        <li style="cursor: pointer;"><a onclick="window.goTo('Registration')">Registration</a></li>
+        <li style="cursor: pointer;"><a onclick="window.goTo('Settings')">Settings</a></li>
+      </ul>
+    </nav>
   </body>
 </html>

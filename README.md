@@ -19,3 +19,4 @@ npm run build
 
 ###[Макет проекта в Figma](https://www.figma.com/file/y0LRYc9p4MyIIKFl0zWJ0Q/YandexPracticum.Chat?node-id=1%3A105&t=ALIRiNnkCr55eIWe-1)
 
+Ссылка на проект: https://wondrous-starship-2abec8.netlify.app/
