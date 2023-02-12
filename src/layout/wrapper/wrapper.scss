@@ -1,0 +1,68 @@
+@import '../../styles/variables';
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  width: auto;
+  background: #fff;
+
+  &_fade {
+    box-shadow: 0 0 5px rgba(54, 54, 54, 0.35);
+  }
+
+  &_px {
+    @each $key, $value in $padding-x {
+      &-#{$key} {
+        padding-left: $value;
+        padding-right: $value;
+      }
+    }
+
+    @media (max-width: 768px) {
+      &-lg {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+    }
+  }
+
+  &_py {
+    @each $key, $value in $padding-y {
+      &-#{$key} {
+        padding-top: $value;
+        padding-bottom: $value;
+      }
+    }
+  }
+
+  &_my-auto {
+    margin-top: auto;
+    margin-bottom: auto;
+  }
+
+  &_mx-auto {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  &_items {
+    &-center {
+      align-items: center;
+    }
+  }
+
+  &_w {
+    &-settings,
+    &-error {
+      width: 920px;
+    }
+
+    &-full {
+      width: 100%;
+    }
+  }
+
+  &_h {
+    &-error { height: 420px; }
+  }
+}

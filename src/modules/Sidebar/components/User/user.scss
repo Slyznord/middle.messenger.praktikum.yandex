@@ -1,0 +1,23 @@
+@import '../../../../styles/variables';
+
+.user {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: auto;
+  gap: 12px;
+  cursor: pointer;
+
+  &__avatar {
+    height: 65px;
+    width: 65px;
+    border-radius: 50%;
+    background: $secondary-3-color;
+  }
+
+  &__name {
+    font-size: 14px;
+    font-weight: 500;
+    color: $text-black;
+  }
+}
