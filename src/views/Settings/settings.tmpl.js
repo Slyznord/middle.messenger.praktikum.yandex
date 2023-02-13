@@ -77,27 +77,33 @@ export default {
 		],
 		fields: [
 			{
-				name: 'Почта',
+				label: 'Почта',
+				name: 'email',
 				value: 'example@example.com'
 			},
 			{
-				name: 'Логин',
+				label: 'Логин',
+				name: 'login',
 				value: 'example@example.com'
 			},
 			{
-				name: 'Имя',
+				label: 'Имя',
+				name: 'first_name',
 				value: 'example@example.com'
 			},
 			{
-				name: 'Фамилия',
+				label: 'Фамилия',
+				name: 'second_name',
 				value: 'example@example.com'
 			},
 			{
-				name: 'Имя в чате',
+				label: 'Имя в чате',
+				name: 'display_name',
 				value: 'example@example.com'
 			},
 			{
-				name: 'Телефон',
+				label: 'Телефон',
+				name: 'phone',
 				value: 'example@example.com'
 			}
 		],
