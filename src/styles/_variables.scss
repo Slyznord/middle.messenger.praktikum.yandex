@@ -1,0 +1,25 @@
+$initial-value: 4;
+
+$primary-color: #806FE8;
+$secondary-1-color: #EDEDED;
+$secondary-2-color: #F2F2F2;
+$secondary-3-color: #D9D9D9;
+$error-color: #E86F6F;
+
+$text-primary: #363636;
+$text-secondary: #9E9E9E;
+$text-secondary-2: #9E9E9E;
+$text-black: #1E1E1E;
+
+$font-sizes: ('xs': 10px, 'sm': 14px, 'base': 16px, 'lg': 18px, '3xl': 30px, '5xl': 48px);
+$font-weight: ('thin': 100, 'extralight': 200, 'light': 300, 'regular': 400, 'medium': 500, 'semibold': 600, 'bold': 700);
+$text-color: ('primary': $primary-color, 'secondary': $text-secondary, 'black': $text-primary);
+
+$padding-y: ('sm': 12px, 'md': 22px, 'lg': 32px, 'xl': 48px);
+$padding-x: ('sm': 12px, 'md': 22px, 'lg': 32px);
+$paddings: ('l': padding-left, 'r': padding-right, 'b': padding-bottom, 't': padding-top);
+
+$rounded: ('sm': 8px, 'md': 12px, 'lg': 16px);
+
+$align-items: ('start': flex-start, 'center': center, 'end': flex-end);
+$justify-content: ('start': flex-start, 'center': center, 'end': flex-end, 'between': space-between);

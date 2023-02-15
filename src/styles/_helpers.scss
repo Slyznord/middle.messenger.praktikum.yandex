@@ -1,0 +1,113 @@
+@import './variables';
+
+.text {
+  // Font-sizes
+  @each $key, $value in $font-sizes {
+    &-#{$key} {
+      font-size: $value;
+    }
+  }
+
+  // Text colors
+  @each $key, $value in $text-color {
+    &-#{$key} {
+      color: $value;
+    }
+  }
+}
+
+.font {
+  @each $key, $value in $font-weight {
+    &-#{$key} {
+      font-weight: $value;
+    }
+  }
+}
+
+.rounded {
+  @each $key, $value in $rounded {
+    &-#{$key} {
+      border-radius: $value;
+    }
+  }
+}
+
+.gap {
+  @for $i from 1 through 12 {
+    &-#{$i} {
+      gap: #{$i * $initial-value}px;
+    }
+  }
+}
+
+.flex {
+  display: flex;
+
+  &-col {
+    flex-direction: column;
+  }
+
+  &-row {
+    flex-direction: row;
+  }
+}
+
+.items {
+  @each $key, $value in $align-items {
+    &-#{$key} {
+      align-items: $value;
+    }
+  }
+}
+
+.justify {
+  @each $key, $value in $justify-content {
+    &-#{$key} {
+      justify-content: $value;
+    }
+  }
+}
+
+.w {
+  &-full {
+    width: 100%;
+  }
+}
+
+.h {
+  &-full {
+    height: 100%;
+  }
+}
+
+// Paddings
+@each $key, $value in $paddings {
+  @for $i from 1 through 12 {
+    .p#{$key}-#{$i} {
+      #{$value}: #{$i * $initial-value}px;
+    }
+
+    .py-#{$i} {
+      padding-top: #{$i * $initial-value}px;
+      padding-bottom: #{$i * $initial-value}px;
+    }
+
+    .px-#{$i} {
+      padding-top: #{$i * $initial-value}px;
+      padding-bottom: #{$i * $initial-value}px;
+    }
+  }
+}
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.my-auto {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.hidden {
+  display: none !important;
+}
