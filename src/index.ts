@@ -6,6 +6,6 @@ import './modules';
 import './views';
 
 window.addEventListener('DOMContentLoaded', () => {
-	window.goTo = goTo;
+	(window as any).goTo = goTo;
 	goTo('Auth');
 });
