@@ -1,11 +1,10 @@
 export default `
-	<div class="flex flex-col items-start gap-1 {{ input-wrapper-classes }}">
-		{{> @partial-block}}
-		<input
-			type="{{ type }}"
-			name="{{ name }}"
-			class="input {{ input-classes }}"
-			placeholder="{{ placeholder }}"
-		>
-	</div>
+  <label class="text-sm text-secondary">{{ label }}</label>
+
+  <input
+    type="{{ type }}"
+    name="{{ name }}"
+    class="input {{ classes }}"
+    placeholder="{{ placeholder }}"
+  >
 `;

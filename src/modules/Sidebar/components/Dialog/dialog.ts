@@ -1,5 +1,13 @@
-import * as Handlebars from 'handlebars';
-import dialog from './dialog.tmpl';
-import './dialog.scss';
+import BaseComponent from '../../../../block/block'
+import template from './dialog.tmpl'
+import './dialog.scss'
 
-Handlebars.registerPartial('dialog', dialog)
+export default class Dialog extends BaseComponent {
+  constructor(props) {
+    super('article', props)
+  }
+
+  render () {
+    return this.compile(template, this.props)
+  }
+}

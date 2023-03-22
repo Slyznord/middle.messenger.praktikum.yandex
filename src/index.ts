@@ -1,11 +1,5 @@
-import goTo from './utils/goTo';
+import Auth from './views/Auth/auth'
+import { render } from './utils/renderDOM'
 
-import './layout';
-import './components';
-import './modules';
-import './views';
 
-window.addEventListener('DOMContentLoaded', () => {
-	(window as any).goTo = goTo;
-	goTo('Auth');
-});
+render('#app', Auth)

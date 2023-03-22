@@ -1,5 +1,14 @@
-import * as Handlebars from 'handlebars';
-import template from './button.tmpl';
-import './button.scss';
+import BaseComponent from '../../block/block'
+import template from './button.tmpl'
+import './button.scss'
 
-Handlebars.registerPartial('button', template)
+export default class Button extends BaseComponent {
+  constructor(props) {
+    super('div', props);
+  }
+
+  render () {
+    // @ts-ignore
+    return this.compile(template, this.props)
+  }
+}

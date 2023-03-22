@@ -1,5 +1,13 @@
-import * as Handlebars from 'handlebars';
-import user from './user.tmpl';
-import './user.scss';
+import BaseComponent from '../../../../block/block'
+import template from './user.tmpl'
+import './user.scss'
 
-Handlebars.registerPartial('user', user);
+export default class User extends BaseComponent {
+  constructor(props) {
+    super('div', props)
+  }
+
+  render () {
+    return this.compile(template, this.props)
+  }
+}

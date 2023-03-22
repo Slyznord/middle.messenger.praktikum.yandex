@@ -1,5 +1,13 @@
-import * as Handlebars from 'handlebars';
-import template from './input.tmpl';
-import './input.scss';
+import BaseComponent from '../../block/block'
+import template from './input.tmpl'
+import './input.scss'
 
-Handlebars.registerPartial('input', template)
+export default class Input extends BaseComponent {
+  constructor(props) {
+    super('div', props)
+  }
+
+  render():HTMLElement {
+    return this.compile(template, this.props)
+  }
+}
