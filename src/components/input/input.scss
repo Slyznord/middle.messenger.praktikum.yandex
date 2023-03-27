@@ -1,0 +1,42 @@
+@import '../../styles/variables';
+
+.input {
+  height: 40px;
+  padding: 0 16px;
+  font-size: 14px;
+  font-weight: 500;
+  color: $text-primary;
+  outline-color: $primary-color;
+  border: none;
+  border-radius: 8px;
+
+  &_w-md {
+    width: 296px;
+
+    @media (max-width: 768px) {
+      width: 280px;
+    }
+  }
+
+  &_w-full {
+    width: 100%;
+  }
+
+  &_fade {
+    box-shadow: 0 0 5px rgba(54, 54, 54, 35%);
+  }
+
+  &_bg-secondary {
+    background: $secondary-1-color;
+  }
+
+  &_message {
+    background: #F2F2F2;
+    border-radius: 16px;
+    height: 32px;
+  }
+
+  &_error {
+    border: thin solid #e86f6f;
+  }
+}

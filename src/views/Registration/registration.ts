@@ -1,8 +1,7 @@
 import BaseComponent from '../../block/block'
-import template from './settings.tmpl'
-import './settings.scss'
+import template from './registration.tmpl'
 
-export default class Settings extends BaseComponent {
+export default class Registration extends BaseComponent {
 	constructor(props) {
 		super('div', props)
 	}

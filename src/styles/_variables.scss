@@ -13,6 +13,7 @@ $text-color: ('primary': $primary-color, 'secondary': $text-secondary, 'black': 
 $padding-y: ('sm': 12px, 'md': 22px, 'lg': 32px, 'xl': 48px);
 $padding-x: ('sm': 12px, 'md': 22px, 'lg': 32px);
 $paddings: ('l': padding-left, 'r': padding-right, 'b': padding-bottom, 't': padding-top);
+$margins: ('l': margin-left, 'r': margin-right, 'b': margin-bottom, 't': margin-top);
 $rounded: ('sm': 8px, 'md': 12px, 'lg': 16px);
 $align-items: ('start': flex-start, 'center': center, 'end': flex-end);
 $justify-content: ('start': flex-start, 'center': center, 'end': flex-end, 'between': space-between);

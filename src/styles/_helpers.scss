@@ -8,7 +8,7 @@
     }
   }
 
-  // Text colors
+  // text colors
   @each $key, $value in $text-color {
     &-#{$key} {
       color: $value;
@@ -93,6 +93,25 @@
     }
 
     .px-#{$i} {
+      padding-top: #{$i * $initial-value}px;
+      padding-bottom: #{$i * $initial-value}px;
+    }
+  }
+}
+
+// Margins
+@each $key, $value in $margins {
+  @for $i from 1 through 12 {
+    .m#{$key}-#{$i} {
+      #{$value}: #{$i * $initial-value}px;
+    }
+
+    .my-#{$i} {
+      padding-top: #{$i * $initial-value}px;
+      padding-bottom: #{$i * $initial-value}px;
+    }
+
+    .mx-#{$i} {
       padding-top: #{$i * $initial-value}px;
       padding-bottom: #{$i * $initial-value}px;
     }

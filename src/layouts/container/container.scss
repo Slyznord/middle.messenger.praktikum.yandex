@@ -1,0 +1,27 @@
+@import '../../styles/variables';
+
+.container {
+  display: flex;
+
+  &_py-sm {
+    padding: 12px 0;
+  }
+
+  &_items {
+    &-center {
+      align-items: center;
+    }
+  }
+
+  &_justify {
+    &-between {
+      justify-content: space-between;
+    }
+  }
+
+  &_border {
+    &-b {
+      border-bottom: thin solid rgba($text-primary, .5);
+    }
+  }
+}

@@ -1,7 +1,8 @@
 import BaseComponent from '../../block/block'
-import template from './home.tmpl'
+import template from './sidebar.tmpl'
+import './sidebar.scss';
 
-export default class Home extends BaseComponent {
+export default class Sidebar extends BaseComponent {
   constructor(props) {
     super('div', props)
   }

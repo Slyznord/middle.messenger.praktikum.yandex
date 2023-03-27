@@ -1,7 +1,8 @@
 import BaseComponent from '../../block/block'
-import template from './home.tmpl'
+import template from './chat.tmpl'
+import './chat.scss'
 
-export default class Home extends BaseComponent {
+export default class Chat extends BaseComponent {
   constructor(props) {
     super('div', props)
   }

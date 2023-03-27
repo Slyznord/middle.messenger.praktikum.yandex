@@ -1,22 +1,22 @@
-import EventBus from './event-bus'
+import EventBus from '../utils/event-bus'
 import { v4 } from 'uuid'
 import * as Handlebars from 'handlebars'
 
 class BaseComponent {
   static EVENTS = {
     INIT: 'init',
-    FLOW_CDM: 'flow:component-did-mount',
-    FLOW_CDU: 'flow:component-did-update',
+    FLOW_CDM: 'flow:components-did-mount',
+    FLOW_CDU: 'flow:components-did-update',
     FLOW_RENDER: 'flow:render'
   }
 
   private element:HTMLElement
-  private children:BaseComponent
+  private children
   private readonly meta:{ tagName:string, props:object }
   private readonly id:string
 
-  props:ProxyHandler<object>
-  eventBus:Function
+  public props:ProxyHandler<object>
+  private eventBus:Function
 
   constructor(tagName:string = 'div', propsAndChildren:object = { settings: {} }) {
     // @ts-ignore
@@ -47,17 +47,15 @@ class BaseComponent {
 
   private _createResources ():void {
     const { tagName } = this.meta
-
     this.element = this._createDocumentElement(tagName)
-    this._addClasses()
   }
 
-  private _addClasses () {
+  private _addParentClass ():void {
     // @ts-ignore
-    const { parentClasses = null } = this.props
+    const { wrapperClasses = null } = this.props
 
-    if (parentClasses) {
-      parentClasses.split(' ').forEach(item => { this.element.classList.add(item) })
+    if (wrapperClasses) {
+      wrapperClasses.split(' ').forEach(item => { this.element.classList.add(item) })
     }
   }
 
@@ -86,7 +84,6 @@ class BaseComponent {
         if (target[prop] !== value) {
           target[prop] = value;
           self.eventBus().emit(BaseComponent.EVENTS.FLOW_CDU, oldProps, target)
-
           return true
         }
 
@@ -100,7 +97,11 @@ class BaseComponent {
 
     this.element.innerHTML = ''
     this.element.appendChild(block)
+
+    this._addParentClass()
     this._addEvents()
+
+    this.eventBus().emit(BaseComponent.EVENTS.FLOW_CDM)
   }
 
   private _componentDidMount ():void {
@@ -120,7 +121,8 @@ class BaseComponent {
     const { events = {} } = this.props
 
     Object.keys(events).forEach(eventName => {
-      this.element.addEventListener(eventName, events[eventName])
+      const element = this.element.querySelector(`[${eventName}]`) || this.element
+      element.addEventListener(eventName, events[eventName])
     })
   }
 
@@ -140,20 +142,18 @@ class BaseComponent {
     // @ts-ignore
     Object.entries(propsAndChildren).forEach(([key, value]) => {
       if (Array.isArray(value)) {
-        const isInstancesOfBaseComponent = value.every(item => item instanceof BaseComponent)
+        const isElementsInstanceBaseComponent = value.every(item => item instanceof BaseComponent)
 
-        if (isInstancesOfBaseComponent) {
-          // value.forEach(item => {
-          //   console.log(item)
-          //   children[key] =
-          // })
-        }
-      } else {
-        if (value instanceof BaseComponent) {
+        if (isElementsInstanceBaseComponent) {
           children[key] = value
-        } else {
-          props[key] = value
+          return
         }
+      }
+
+      if (value instanceof BaseComponent) {
+        children[key] = value
+      } else {
+        props[key] = value
       }
     })
 
@@ -194,13 +194,17 @@ class BaseComponent {
 
   public render ():any {}
 
-  public compile (template, props):HTMLElement {
+  public compile (template, props):DocumentFragment {
     const propsAndStubs = { ...props }
     const compile = Handlebars.compile(template)
 
     // @ts-ignore
     Object.entries(this.children).forEach(([key, child]) => {
-      propsAndStubs[key] = `<div data-id="${child.id}"></div>`
+      if (Array.isArray(child)) {
+        propsAndStubs[key] = child.reduce((str, item) => str + `<div data-id="${item.id}"></div>`, '')
+      } else {
+        propsAndStubs[key] = `<div data-id="${child.id}"></div>`
+      }
     })
 
     const fragment = this._createDocumentElement('template')
@@ -208,9 +212,17 @@ class BaseComponent {
 
     // @ts-ignore
     Object.values(this.children).forEach(child => {
-      // @ts-ignore
-      const stub = fragment.content.querySelector(`[data-id="${child.id}"]`)
-      stub.replaceWith(child.getContent())
+      if (Array.isArray(child)) {
+        child.forEach(item => {
+          // @ts-ignore
+          const stub = fragment.content.querySelector(`[data-id="${item.id}"]`)
+          stub.replaceWith(item.getContent())
+        })
+      } else {
+        // @ts-ignore
+        const stub = fragment.content.querySelector(`[data-id="${child.id}"]`)
+        stub.replaceWith(child.getContent())
+      }
     })
 
     // @ts-ignore
