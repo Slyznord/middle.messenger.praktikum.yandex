@@ -80,10 +80,8 @@ const sidebar = new Sidebar({
 	})
 })
 
-const home = new Home({
+export default new Home({
 	wrapperClasses: 'flex flex-row gap-8 h-full w-full',
 	chat,
 	sidebar
 })
-
-export default home

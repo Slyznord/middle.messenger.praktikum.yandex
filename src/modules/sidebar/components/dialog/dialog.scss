@@ -11,24 +11,6 @@
   cursor: pointer;
   transition: .25s ease-in-out;
 
-  &:hover:not(.dialog_active) {
-    background: rgba($primary-color, .25);
-
-    .dialog__name,
-    .dialog__message {
-      color: #FFF;
-    }
-  }
-
-  &_active {
-    background: rgba($primary-color, .4);
-
-    .dialog__name,
-    .dialog__message {
-      color: #FFF;
-    }
-  }
-
   &__avatar {
     width: 50px;
     height: 50px;
@@ -51,5 +33,23 @@
     font-size: 12px;
     font-weight: 500;
     color: $text-secondary;
+  }
+
+  &_active {
+    background: rgba($primary-color, .4);
+
+    .dialog__name,
+    .dialog__message {
+      color: #FFF;
+    }
+  }
+
+  &:hover:not(.dialog_active) {
+    background: rgba($primary-color, .25);
+
+    .dialog__name,
+    .dialog__message {
+      color: #FFF;
+    }
   }
 }

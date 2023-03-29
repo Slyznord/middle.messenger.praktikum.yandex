@@ -8,9 +8,8 @@ enum METHODS {
 
 type Options = {
   method: METHODS,
-  data?:any
+  data?:object
 }
-
 type OptionsWithoutMethod = Omit<Options, 'method'>
 
 class HTTPTransport {
@@ -34,8 +33,7 @@ class HTTPTransport {
     return this.request(url, { ...options, method: METHODS.DELETE })
   }
 
-  private queryStringify (data:object):string {
-    // @ts-ignore
+  queryStringify (data:object):string {
     return Object.entries(data).reduce((sum, [key, value], index) => {
       if (index) sum += '&'
 

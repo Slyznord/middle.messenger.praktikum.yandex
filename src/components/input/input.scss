@@ -10,6 +10,14 @@
   border: none;
   border-radius: 8px;
 
+  &__error {
+    display: none;
+    font-size: 12px;
+    font-weight: 500;
+    color: #e86f6f;
+    margin-top: 8px;
+  }
+
   &_w-md {
     width: 296px;
 
@@ -27,7 +35,7 @@
   }
 
   &_fade {
-    box-shadow: 0 0 5px rgba(54, 54, 54, 35%);
+    box-shadow: 0 0 5px rgb(54 54 54 / 35%);
   }
 
   &_bg-secondary {
@@ -46,13 +54,5 @@
     & ~ .input__error {
       display: block;
     }
-  }
-
-  &__error {
-    display: none;
-    font-size: 12px;
-    font-weight: 500;
-    color: #e86f6f;
-    margin-top: 8px;
   }
 }

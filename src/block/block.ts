@@ -1,6 +1,7 @@
 import EventBus from '../utils/event-bus'
 import { v4 } from 'uuid'
 import * as Handlebars from 'handlebars'
+import { Props } from './types'
 
 class BaseComponent {
   static EVENTS = {
@@ -15,11 +16,10 @@ class BaseComponent {
   private readonly meta:{ tagName:string, props:object }
   private readonly id:string
 
-  public props:ProxyHandler<object>
-  private eventBus:Function
+  public props:Props
+  private eventBus
 
-  constructor(tagName:string = 'div', propsAndChildren:object = { settings: {} }) {
-    // @ts-ignore
+  constructor(tagName = 'div', propsAndChildren:object = { settings: {} }) {
     const { children, props } = this._getChildren(propsAndChildren)
     const eventBus = new EventBus()
 
@@ -33,7 +33,7 @@ class BaseComponent {
     eventBus.emit(BaseComponent.EVENTS.INIT)
   }
 
-  private registerEvents (eventBus):void {
+  private registerEvents (eventBus:EventBus):void {
     eventBus.on(BaseComponent.EVENTS.INIT, this._init.bind(this))
     eventBus.on(BaseComponent.EVENTS.FLOW_CDM, this._componentDidMount.bind(this))
     eventBus.on(BaseComponent.EVENTS.FLOW_RENDER, this._render.bind(this))
@@ -51,7 +51,6 @@ class BaseComponent {
   }
 
   private _addParentClass ():void {
-    // @ts-ignore
     const { wrapperClasses = null } = this.props
 
     if (wrapperClasses) {
@@ -62,7 +61,6 @@ class BaseComponent {
   private _createDocumentElement (tagName:string):HTMLElement {
     const element = document.createElement(tagName)
 
-    // @ts-ignore
     if (this.props.settings?.withInternalID) {
       element.setAttribute('data-id', this.id)
     }
@@ -70,19 +68,19 @@ class BaseComponent {
     return element
   }
 
-  private _makePropsProxy (props:object):ProxyHandler<object> {
+  private _makePropsProxy (props:object):Props {
     const self = this
 
     return new Proxy(props, {
-      set (target, prop:string, value) {
+      set (target:Props, prop:string, value) {
         if (prop.indexOf('_') === 0) {
           throw new Error('Отказано в доступе')
         }
 
         const oldProps = JSON.parse(JSON.stringify(target))
 
-        if (target[prop] !== value) {
-          target[prop] = value;
+        if (target[prop as keyof typeof target] !== value) {
+          target[prop as keyof typeof target] = value;
           self.eventBus().emit(BaseComponent.EVENTS.FLOW_CDU, oldProps, target)
           return true
         }
@@ -108,7 +106,7 @@ class BaseComponent {
     this.componentDidMount();
   }
 
-  private _componentDidUpdate (oldProps, newProps):void {
+  private _componentDidUpdate (oldProps:Props, newProps:Props):void {
     const response = this.componentDidUpdate(oldProps, newProps)
 
     if (response) {
@@ -117,29 +115,26 @@ class BaseComponent {
   }
 
   private _addEvents ():void {
-    // @ts-ignore
     const { events = {} } = this.props
 
     Object.keys(events).forEach(eventName => {
       const element = this.element.querySelector(`[${eventName}]`) || this.element
-      element.addEventListener(eventName, events[eventName])
+      element.addEventListener(eventName, events[eventName as keyof typeof events])
     })
   }
 
   private _removeEvents ():void {
-    // @ts-ignore
     const { events = {} } = this.props
 
     Object.keys(events).forEach(eventName => {
-      this.element.removeEventListener(eventName, events[eventName])
+      this.element.removeEventListener(eventName, events[eventName as keyof typeof events])
     })
   }
 
-  private _getChildren (propsAndChildren):object {
-    const children:object = {}
-    const props:object = {}
+  private _getChildren (propsAndChildren:object): { children:object, props:object } {
+    const children:any = {}
+    const props:any = {}
 
-    // @ts-ignore
     Object.entries(propsAndChildren).forEach(([key, value]) => {
       if (Array.isArray(value)) {
         const isElementsInstanceBaseComponent = value.every(item => item instanceof BaseComponent)
@@ -163,15 +158,16 @@ class BaseComponent {
 
   public componentDidMount ():void {}
 
-  public dispatchComponentDidMount (oldProps):void {
+  public dispatchComponentDidMount (oldProps:Props):void {
     this.eventBus().emit(BaseComponent.EVENTS.FLOW_CDM, oldProps)
   }
 
-  public componentDidUpdate (oldProps, newProps):boolean {
+  public componentDidUpdate (oldProps:Props, newProps:Props):boolean {
+    console.log(oldProps, newProps)
     return true;
   }
 
-  public setProps = (nextProps):void => {
+  public setProps = (nextProps:Props):void => {
     if (!nextProps) {
       return;
     }
@@ -195,12 +191,11 @@ class BaseComponent {
 
   public render ():any {}
 
-  public compile (template, props):DocumentFragment {
-    const propsAndStubs = { ...props }
+  public compile (template:string, props:Props):DocumentFragment {
+    const propsAndStubs:any = { ...props }
     const compile = Handlebars.compile(template)
 
-    // @ts-ignore
-    Object.entries(this.children).forEach(([key, child]) => {
+    Object.entries(this.children).forEach(([key, child]:[string, Array<BaseComponent> | BaseComponent]) => {
       if (Array.isArray(child)) {
         propsAndStubs[key] = child.reduce((str, item) => str + `<div data-id="${item.id}"></div>`, '')
       } else {
@@ -208,25 +203,21 @@ class BaseComponent {
       }
     })
 
-    const fragment = this._createDocumentElement('template')
+    const fragment = this._createDocumentElement('template') as HTMLTemplateElement
     fragment.innerHTML = compile(propsAndStubs)
 
-    // @ts-ignore
-    Object.values(this.children).forEach(child => {
+    Object.values(this.children).forEach((child:BaseComponent | Array<BaseComponent>) => {
       if (Array.isArray(child)) {
         child.forEach(item => {
-          // @ts-ignore
-          const stub = fragment.content.querySelector(`[data-id="${item.id}"]`)
+          const stub = fragment.content.querySelector(`[data-id="${item.id}"]`) as HTMLTemplateElement
           stub.replaceWith(item.getContent())
         })
       } else {
-        // @ts-ignore
-        const stub = fragment.content.querySelector(`[data-id="${child.id}"]`)
+        const stub = fragment.content.querySelector(`[data-id="${child.id}"]`) as HTMLTemplateElement
         stub.replaceWith(child.getContent())
       }
     })
 
-    // @ts-ignore
     return fragment.content
   }
 }

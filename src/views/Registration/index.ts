@@ -14,7 +14,6 @@ import { onSubmit } from '../../utils/formEvents'
 import inputEvents from '../../utils/inputEvents'
 import validatorRulesName from '../../constants/validatorRulesName'
 import Validator from '../../utils/validator'
-import ValidatorRulesName from "../../constants/validatorRulesName";
 
 export default new Registration({
 	wrapperClasses: 'wrapper wrapper_fade wrapper_px-lg wrapper_py-lg wrapper_my-auto wrapper_mx-auto wrapper_items-center rounded-md gap-12',

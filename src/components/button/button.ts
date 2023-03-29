@@ -4,7 +4,7 @@ import './button.scss'
 import { props } from './types'
 
 export default class Button extends BaseComponent {
-  constructor(tagName:string = 'div', props:props) {
+  constructor(tagName = 'div', props:props) {
     super(tagName, props);
   }
 

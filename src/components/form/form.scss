@@ -5,6 +5,12 @@
   width: 100%;
   gap: 36px;
 
+  &__controls {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
   &_col-controls {
     .form__controls {
       flex-direction: column;
@@ -23,11 +29,5 @@
 
   &__item {
     width: 100%;
-  }
-
-  &__controls {
-    display: flex;
-    align-items: center;
-    gap: 20px;
   }
 }

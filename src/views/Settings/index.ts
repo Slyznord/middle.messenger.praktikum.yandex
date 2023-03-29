@@ -359,12 +359,12 @@ const settings = new Settings({
 
 settings.componentDidMount = function () {
 	if (this.props.isEditing) {
-		for (let key in fields) {
+		for (const key in fields) {
 			fields[key].input.show()
 			fields[key].label.hide()
 		}
 	} else {
-		for (let key in fields) {
+		for (const key in fields) {
 			fields[key].input.hide()
 			fields[key].label.show()
 		}

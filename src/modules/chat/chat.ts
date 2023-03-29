@@ -13,14 +13,18 @@ export default class Chat extends BaseComponent {
   }
 
   componentDidMount() {
-    if (!this.props.hasOwnProperty('dialogs')) {
+    const { dialogs = null } = this.props as props
+
+    if (!dialogs) {
       this.children.header.hide()
       this.children.control.hide()
     }
   }
 
-  componentDidUpdate(oldProps, newProps): boolean {
-    if (!this.props.hasOwnProperty('dialogs')) {
+  componentDidUpdate():boolean {
+    const { dialogs = null } = this.props as props
+
+    if (!dialogs) {
       this.children.header.hide()
       this.children.control.hide()
     } else {
