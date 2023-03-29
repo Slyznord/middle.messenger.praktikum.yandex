@@ -11,7 +11,7 @@ class BaseComponent {
   }
 
   private element:HTMLElement
-  private children
+  protected children
   private readonly meta:{ tagName:string, props:object }
   private readonly id:string
 
@@ -144,9 +144,10 @@ class BaseComponent {
       if (Array.isArray(value)) {
         const isElementsInstanceBaseComponent = value.every(item => item instanceof BaseComponent)
 
-        if (isElementsInstanceBaseComponent) {
+        if (isElementsInstanceBaseComponent && value.length) {
           children[key] = value
-          return
+        } else {
+          props[key] = value
         }
       }
 

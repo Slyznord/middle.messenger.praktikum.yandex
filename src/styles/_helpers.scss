@@ -115,6 +115,10 @@
       padding-top: #{$i * $initial-value}px;
       padding-bottom: #{$i * $initial-value}px;
     }
+
+    .ma-auto {
+      margin: auto;
+    }
   }
 }
 

@@ -3,9 +3,26 @@ export default `
       {{{ header }}}
 
 			<form class="chat__form">
-				<div class="chat__dialog">
-					{{{ dialog }}}
-				</div>
+			  {{#if dialogs}}
+          <div class="chat__dialog">
+            {{#each dialogs}}
+              <div class="chat__day">
+                <span class="chat__day-date">{{ date }}</span>
+            
+                <div class="chat__day-messages">
+                  {{#each messages}}
+                    <div class="chat__message {{ classes }}">
+                      <p class="chat__message-text">{{ text }}</p>
+                      <span class="chat__message-time">{{ time }}</span>
+                    </div>
+                  {{/each}}
+                </div>
+              </div>
+            {{/each}}
+          </div>
+        {{^}}
+          <span class="flex text-base font-semibold text-black ma-auto">Выберите диалог</span>
+        {{/if}}
 	
 				{{{ control }}}
 			</form>

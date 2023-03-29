@@ -12,9 +12,10 @@ import User from '../../modules/user/user'
 
 // utils
 import { render } from '../../utils/renderDOM'
+import { onSubmit } from '../../utils/formEvents'
 import inputEvents from '../../utils/inputEvents'
+import validatorRulesName from '../../constants/validatorRulesName'
 import Validator from '../../utils/validator'
-import Home from "../Home";
 
 const buttons = {
 	changeData: new Button('div', {
@@ -28,6 +29,7 @@ const buttons = {
 				buttons.changePassword.hide()
 				buttons.logout.hide()
 				buttons.saveData.show()
+				buttons.cancelChangeData.show()
 			}
 		}
 	}),
@@ -40,6 +42,7 @@ const buttons = {
 				buttons.changePassword.hide()
 				buttons.logout.hide()
 				buttons.savePassword.show()
+				buttons.cancelChangePassword.show()
 
 				userDataForm.hide()
 				userPasswordForm.show()
@@ -62,12 +65,43 @@ const buttons = {
 	savePassword: new Button('button', {
 		wrapperClasses: 'button button_md button_primary',
 		value: 'Сохранить пароль'
+	}),
+	cancelChangeData: new Button('div', {
+		classes: 'button button_md button_primary',
+		value: 'Отмена',
+		events: {
+			click: () => {
+				settings.setProps({ isEditing: false })
+
+				buttons.changeData.show()
+				buttons.changePassword.show()
+				buttons.logout.show()
+				buttons.saveData.hide()
+				buttons.cancelChangeData.hide()
+			}
+		}
+	}),
+	cancelChangePassword: new Button('div', {
+		classes: 'button button_md button_primary',
+		value: 'Отмена',
+		events: {
+			click: () => {
+				buttons.changeData.show()
+				buttons.changePassword.show()
+				buttons.logout.show()
+				buttons.savePassword.hide()
+
+				userDataForm.show()
+				userPasswordForm.hide()
+			}
+		}
 	})
 }
 const fields = {
 	email: {
 		input: new Input({
-			validateRule: 'email',
+			validateRule: validatorRulesName.EMAIL,
+			error: Validator.getErrorMessage(validatorRulesName.EMAIL),
 			wrapperClasses: 'flex flex-col items-start gap-1',
 			type: 'text',
 			name: 'email',
@@ -81,7 +115,8 @@ const fields = {
 	},
 	login: {
 		input: new Input({
-			validateRule: 'login',
+			validateRule: validatorRulesName.LOGIN,
+			error: Validator.getErrorMessage(validatorRulesName.LOGIN),
 			wrapperClasses: 'flex flex-col items-start gap-1',
 			type: 'text',
 			name: 'login',
@@ -95,7 +130,8 @@ const fields = {
 	},
 	firstName: {
 		input: new Input({
-			validateRule: 'name',
+			validateRule: validatorRulesName.NAME,
+			error: Validator.getErrorMessage(validatorRulesName.NAME),
 			wrapperClasses: 'flex flex-col items-start gap-1',
 			type: 'text',
 			name: 'first_name',
@@ -109,7 +145,8 @@ const fields = {
 	},
 	secondName: {
 		input: new Input({
-			validateRule: 'name',
+			validateRule: validatorRulesName.NAME,
+			error: Validator.getErrorMessage(validatorRulesName.NAME),
 			wrapperClasses: 'flex flex-col items-start gap-1',
 			type: 'text',
 			name: 'second_name',
@@ -123,7 +160,8 @@ const fields = {
 	},
 	displayName: {
 		input: new Input({
-			validateRule: 'login',
+			validateRule: validatorRulesName.LOGIN,
+			error: Validator.getErrorMessage(validatorRulesName.LOGIN),
 			wrapperClasses: 'flex flex-col items-start gap-1',
 			type: 'text',
 			name: 'display_name',
@@ -137,7 +175,8 @@ const fields = {
 	},
 	phone: {
 		input: new Input({
-			validateRule: 'phone',
+			validateRule: validatorRulesName.PHONE,
+			error: Validator.getErrorMessage(validatorRulesName.PHONE),
 			wrapperClasses: 'flex flex-col items-start gap-1',
 			type: 'text',
 			name: 'phone',
@@ -226,7 +265,8 @@ const fieldsGroup = {
 }
 const password = {
 	old: new Input({
-		validateRule: 'password',
+		validateRule: validatorRulesName.PASSWORD,
+		error: Validator.getErrorMessage(validatorRulesName.PASSWORD),
 		wrapperClasses: 'flex flex-col items-start gap-1 w-full mb-4',
 		label: 'Старый пароль',
 		type: 'password',
@@ -235,7 +275,8 @@ const password = {
 		events: inputEvents
 	}),
 	new: new Input({
-		validateRule: 'password',
+		validateRule: validatorRulesName.PASSWORD,
+		error: Validator.getErrorMessage(validatorRulesName.PASSWORD),
 		wrapperClasses: 'flex flex-col items-start gap-1 w-full',
 		label: 'Новый пароль',
 		type: 'password',
@@ -260,33 +301,19 @@ const userDataForm = new Form({
 		buttons.changePassword,
 		buttons.logout,
 		buttons.saveData,
-		buttons.savePassword
+		buttons.savePassword,
+		buttons.cancelChangeData
 	],
 	events: {
 		submit: (event) => {
-			event.preventDefault()
-
-			const inputs = event.target.querySelectorAll('input')
-			const preparedData = Array.from(inputs).reduce((obj:object, item:HTMLInputElement) => {
-				const key:string = item.getAttribute('name') || ''
-				return { ...obj, [key]: item.value }
-			}, {})
-
-			if (!Validator.validateAll(inputs)) {
-				const invalidInputs = Validator.getInvalidInputs(inputs)
-				invalidInputs.forEach(item => item.classList.add('input_error'))
-			} else {
-				inputs.forEach(item => item.classList.remove('input_error'))
-
-				console.log(preparedData)
-
+			onSubmit(event).then(() => {
 				buttons.changeData.show()
 				buttons.changePassword.show()
 				buttons.logout.show()
 				buttons.saveData.hide()
 
 				settings.setProps({ isEditing: false })
-			}
+			})
 		}
 	}
 })
@@ -297,33 +324,21 @@ const userPasswordForm = new Form({
 		password.new
 	],
 	controls: [
-		buttons.savePassword
+		buttons.savePassword,
+		buttons.cancelChangePassword
 	],
 	events: {
 		submit: (event) => {
-			event.preventDefault()
-
-			const inputs = event.target.querySelectorAll('input')
-			const preparedData = Array.from(inputs).reduce((obj:object, item:HTMLInputElement) => {
-				const key:string = item.getAttribute('name') || ''
-				return { ...obj, [key]: item.value }
-			}, {})
-
-			if (!Validator.validateAll(inputs)) {
-				const invalidInputs = Validator.getInvalidInputs(inputs)
-				invalidInputs.forEach(item => item.classList.add('input_error'))
-			} else {
-				inputs.forEach(item => item.classList.remove('input_error'))
-
-				console.log(preparedData)
-
+			onSubmit(event).then(() => {
 				userPasswordForm.hide()
 				buttons.changeData.show()
 				buttons.changePassword.show()
 				buttons.logout.show()
 				buttons.savePassword.hide()
 				userDataForm.show()
-			}
+
+				settings.setProps({ isEditing: false })
+			})
 		}
 	}
 })
@@ -359,6 +374,8 @@ settings.componentDidMount = function () {
 
 	buttons.saveData.hide()
 	buttons.savePassword.hide()
+	buttons.cancelChangeData.hide()
+	buttons.cancelChangePassword.hide()
 }
 
 export default settings

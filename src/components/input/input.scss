@@ -16,6 +16,10 @@
     @media (max-width: 768px) {
       width: 280px;
     }
+
+    & ~ .input__error {
+      max-width: 296px;
+    }
   }
 
   &_w-full {
@@ -38,5 +42,17 @@
 
   &_error {
     border: thin solid #e86f6f;
+
+    & ~ .input__error {
+      display: block;
+    }
+  }
+
+  &__error {
+    display: none;
+    font-size: 12px;
+    font-weight: 500;
+    color: #e86f6f;
+    margin-top: 8px;
   }
 }

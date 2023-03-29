@@ -10,8 +10,11 @@ import Input from '../../components/input/input'
 
 // utils
 import { render } from '../../utils/renderDOM'
+import { onSubmit } from '../../utils/formEvents'
 import inputEvents from '../../utils/inputEvents'
+import validatorRulesName from '../../constants/validatorRulesName'
 import Validator from '../../utils/validator'
+import ValidatorRulesName from "../../constants/validatorRulesName";
 
 export default new Registration({
 	wrapperClasses: 'wrapper wrapper_fade wrapper_px-lg wrapper_py-lg wrapper_my-auto wrapper_mx-auto wrapper_items-center rounded-md gap-12',
@@ -35,7 +38,8 @@ export default new Registration({
 		],
 		fields: [
 			new Input({
-				validateRule: 'email',
+				validateRule: validatorRulesName.EMAIL,
+				error: Validator.getErrorMessage(validatorRulesName.EMAIL),
 				wrapperClasses: 'flex flex-col gap-1',
 				label: 'Почта',
 				name: 'email',
@@ -44,7 +48,8 @@ export default new Registration({
 				events: inputEvents
 			}),
 			new Input({
-				validateRule: 'login',
+				validateRule: validatorRulesName.LOGIN,
+				error: Validator.getErrorMessage(validatorRulesName.LOGIN),
 				wrapperClasses: 'flex flex-col gap-1',
 				label: 'Логин',
 				name: 'login',
@@ -53,7 +58,8 @@ export default new Registration({
 				events: inputEvents
 			}),
 			new Input({
-				validateRule: 'name',
+				validateRule: validatorRulesName.NAME,
+				error: Validator.getErrorMessage(validatorRulesName.NAME),
 				wrapperClasses: 'flex flex-col gap-1',
 				label: 'Имя',
 				name: 'first_name',
@@ -62,7 +68,8 @@ export default new Registration({
 				events: inputEvents
 			}),
 			new Input({
-				validateRule: 'name',
+				validateRule: validatorRulesName.NAME,
+				error: Validator.getErrorMessage(validatorRulesName.NAME),
 				wrapperClasses: 'flex flex-col gap-1',
 				label: 'Фамилия',
 				name: 'second_name',
@@ -71,7 +78,8 @@ export default new Registration({
 				events: inputEvents
 			}),
 			new Input({
-				validateRule: 'phone',
+				validateRule: validatorRulesName.PHONE,
+				error: Validator.getErrorMessage(validatorRulesName.PHONE),
 				wrapperClasses: 'flex flex-col gap-1',
 				label: 'Телефон',
 				name: 'phone',
@@ -80,7 +88,8 @@ export default new Registration({
 				events: inputEvents
 			}),
 			new Input({
-				validateRule: 'password',
+				validateRule: validatorRulesName.PASSWORD,
+				error: Validator.getErrorMessage(validatorRulesName.PASSWORD),
 				wrapperClasses: 'flex flex-col gap-1',
 				label: 'Пароль',
 				name: 'password',
@@ -89,7 +98,8 @@ export default new Registration({
 				events: inputEvents
 			}),
 			new Input({
-				validateRule: 'password',
+				validateRule: validatorRulesName.PASSWORD,
+				error: Validator.getErrorMessage(validatorRulesName.PASSWORD),
 				wrapperClasses: 'flex flex-col gap-1',
 				label: 'Пароль (еще раз)',
 				name: 'password_confirm',
@@ -100,22 +110,9 @@ export default new Registration({
 		],
 		events: {
 			submit: (event) => {
-				event.preventDefault()
-
-				const inputs = event.target.querySelectorAll('input')
-				const preparedData = Array.from(inputs).reduce((obj:object, item:HTMLInputElement) => {
-					const key:string = item.getAttribute('name') || ''
-					return { ...obj, [key]: item.value }
-				}, {})
-
-				if (!Validator.validateAll(inputs)) {
-					const invalidInputs = Validator.getInvalidInputs(inputs)
-					invalidInputs.forEach(item => item.classList.add('input_error'))
-				} else {
-					inputs.forEach(item => item.classList.remove('input_error'))
-					console.log(preparedData)
+				onSubmit(event).then(() => {
 					render('#app', Home)
-				}
+				})
 			}
 		}
 	})

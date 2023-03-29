@@ -10,29 +10,33 @@ import Input from '../../components/input/input'
 
 // utils
 import { render } from '../../utils/renderDOM'
+import { onSubmit } from '../../utils/formEvents'
 import inputEvents from '../../utils/inputEvents'
 import Validator from '../../utils/validator'
+import validatorRulesName from '../../constants/validatorRulesName'
 
 export default new Auth({
 	form: new Form({
 		classes: 'form_col-controls',
 		fields: [
 			new Input({
-				validateRule: 'login',
+				validateRule: validatorRulesName.LOGIN,
 				wrapperClasses: 'flex flex-col items-start gap-1',
 				type: 'text',
 				name: 'login',
 				label: 'Логин',
 				classes: 'input input_w-md input_fade',
+				error: Validator.getErrorMessage(validatorRulesName.LOGIN),
 				events: inputEvents
 			}),
 			new Input({
-				validateRule: 'notEmpty',
+				validateRule: validatorRulesName.NOT_EMPTY,
 				wrapperClasses: 'flex flex-col items-start gap-1',
 				type: 'password',
 				name: 'password',
 				label: 'Пароль',
 				classes: 'input input_w-md input_fade',
+				error: Validator.getErrorMessage(validatorRulesName.NOT_EMPTY),
 				events: inputEvents
 			})
 		],
@@ -53,22 +57,9 @@ export default new Auth({
 		],
 		events: {
 			submit: (event) => {
-				event.preventDefault()
-
-				const inputs = event.target.querySelectorAll('input')
-				const preparedData = Array.from(inputs).reduce((obj:object, item:HTMLInputElement) => {
-					const key:string = item.getAttribute('name') || ''
-					return { ...obj, [key]: item.value }
-				}, {})
-
-				if (!Validator.validateAll(inputs)) {
-					const invalidInputs = Validator.getInvalidInputs(inputs)
-					invalidInputs.forEach(item => item.classList.add('input_error'))
-				} else {
-					inputs.forEach(item => item.classList.remove('input_error'))
-					console.log(preparedData)
+				onSubmit(event).then(() => {
 					render('#app', Home)
-				}
+				})
 			}
 		}
 	}),

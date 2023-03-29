@@ -10,4 +10,6 @@ export default `
     blur
     focus
   >
+
+  <label class="input__error">{{ error }}</label>
 `;

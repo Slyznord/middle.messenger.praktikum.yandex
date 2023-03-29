@@ -1,3 +1,6 @@
 export type props = {
-	wrapperClasses?:string
+	wrapperClasses?:string,
+	dialogs?:[],
+	control:object,
+	header:object
 }

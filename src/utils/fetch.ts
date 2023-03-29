@@ -18,6 +18,33 @@ class HTTPTransport {
     return this.request(url, { ...options, method: METHODS.GET })
   }
 
+  post (url:string, options:OptionsWithoutMethod = {}):Promise<XMLHttpRequest> {
+    return this.request(url, { ...options, method: METHODS.POST })
+  }
+
+  put (url:string, options:OptionsWithoutMethod = {}):Promise<XMLHttpRequest> {
+    return this.request(url, { ...options, method: METHODS.PUT })
+  }
+
+  patch (url:string, options:OptionsWithoutMethod = {}):Promise<XMLHttpRequest> {
+    return this.request(url, { ...options, method: METHODS.PATCH })
+  }
+
+  delete (url:string, options:OptionsWithoutMethod = {}):Promise<XMLHttpRequest> {
+    return this.request(url, { ...options, method: METHODS.DELETE })
+  }
+
+  private queryStringify (data:object):string {
+    // @ts-ignore
+    return Object.entries(data).reduce((sum, [key, value], index) => {
+      if (index) sum += '&'
+
+      sum += `${key}=${value}`
+
+      return sum
+    }, '?')
+  }
+
   private request(url:string, options:Options = { method: METHODS.GET }):Promise<XMLHttpRequest> {
     const { method, data } = options
 
@@ -36,7 +63,7 @@ class HTTPTransport {
       if (method === METHODS.GET || !data) {
         xhr.send()
       } else {
-        xhr.send(data)
+        xhr.send(this.queryStringify(data))
       }
     })
   }
