@@ -8,7 +8,7 @@
     }
   }
 
-  // Text colors
+  // text colors
   @each $key, $value in $text-color {
     &-#{$key} {
       color: $value;
@@ -98,6 +98,30 @@
     }
   }
 }
+
+// Margins
+@each $key, $value in $margins {
+  @for $i from 1 through 12 {
+    .m#{$key}-#{$i} {
+      #{$value}: #{$i * $initial-value}px;
+    }
+
+    .my-#{$i} {
+      padding-top: #{$i * $initial-value}px;
+      padding-bottom: #{$i * $initial-value}px;
+    }
+
+    .mx-#{$i} {
+      padding-top: #{$i * $initial-value}px;
+      padding-bottom: #{$i * $initial-value}px;
+    }
+
+    .ma-auto {
+      margin: auto;
+    }
+  }
+}
+
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
