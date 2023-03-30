@@ -8,32 +8,34 @@ enum METHODS {
 
 type Options = {
   method: METHODS,
-  data?:object
+  data?:any
 }
+
 type OptionsWithoutMethod = Omit<Options, 'method'>
+type HTTPMethod = (url:string, options?:OptionsWithoutMethod) => Promise<unknown>
 
 class HTTPTransport {
-  get (url:string, options:OptionsWithoutMethod = {}):Promise<XMLHttpRequest> {
+  get:HTTPMethod = (url, options = {}) => {
     return this.request(url, { ...options, method: METHODS.GET })
   }
 
-  post (url:string, options:OptionsWithoutMethod = {}):Promise<XMLHttpRequest> {
+  post:HTTPMethod = (url, options = {}) => {
     return this.request(url, { ...options, method: METHODS.POST })
   }
 
-  put (url:string, options:OptionsWithoutMethod = {}):Promise<XMLHttpRequest> {
+  put:HTTPMethod = (url, options = {}) => {
     return this.request(url, { ...options, method: METHODS.PUT })
   }
 
-  patch (url:string, options:OptionsWithoutMethod = {}):Promise<XMLHttpRequest> {
+  patch:HTTPMethod = (url, options = {}) => {
     return this.request(url, { ...options, method: METHODS.PATCH })
   }
 
-  delete (url:string, options:OptionsWithoutMethod = {}):Promise<XMLHttpRequest> {
+  delete:HTTPMethod = (url, options = {}) => {
     return this.request(url, { ...options, method: METHODS.DELETE })
   }
 
-  queryStringify (data:object):string {
+  private queryStringify (data:object):string {
     return Object.entries(data).reduce((sum, [key, value], index) => {
       if (index) sum += '&'
 
