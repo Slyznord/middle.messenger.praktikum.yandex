@@ -1,4 +1,4 @@
-import EventBus from '../utils/event-bus'
+import EventBus from '../event-bus'
 import { v4 } from 'uuid'
 import * as Handlebars from 'handlebars'
 import { Props } from './types'
@@ -12,11 +12,11 @@ class BaseComponent {
   }
 
   private element:HTMLElement
-  protected children
+  protected children:any
   private readonly meta:{ tagName:string, props:object }
   private readonly id:string
 
-  public props:Props
+  public props:any
   private eventBus
 
   constructor(tagName = 'div', propsAndChildren:object = { settings: {} }) {
@@ -54,7 +54,7 @@ class BaseComponent {
     const { wrapperClasses = null } = this.props
 
     if (wrapperClasses) {
-      wrapperClasses.split(' ').forEach(item => { this.element.classList.add(item) })
+      wrapperClasses.split(' ').forEach((item:string) => { this.element.classList.add(item) })
     }
   }
 
@@ -167,7 +167,7 @@ class BaseComponent {
     return true;
   }
 
-  public setProps = (nextProps:Props):void => {
+  public setProps = (nextProps:any):void => {
     if (!nextProps) {
       return;
     }

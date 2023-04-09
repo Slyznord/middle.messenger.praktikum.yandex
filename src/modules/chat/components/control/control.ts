@@ -1,4 +1,4 @@
-import BaseComponent from '../../../../block/block'
+import BaseComponent from '../../../../utils/block/block'
 import template from './control.tmpl'
 
 export default class Control extends BaseComponent {

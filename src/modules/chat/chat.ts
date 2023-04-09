@@ -1,4 +1,4 @@
-import BaseComponent from '../../block/block'
+import BaseComponent from '../../utils/block/block'
 import template from './chat.tmpl'
 import './chat.scss'
 import { props } from './types'

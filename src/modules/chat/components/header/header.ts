@@ -1,4 +1,4 @@
-import BaseComponent from '../../../../block/block'
+import BaseComponent from '../../../../utils/block/block'
 import template from './header.tmpl'
 import './header.scss'
 

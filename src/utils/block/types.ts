@@ -1,5 +1,6 @@
 export type Props = {
 	wrapperClasses?:string,
 	settings?: { withInternalID: boolean },
-	events?:object
+	events?:object,
+	classes?:string
 }
