@@ -7,5 +7,6 @@ export type props = {
 	wrapperClasses?:string,
 	validateRule?:string,
 	events?:object,
-	error?:string
+	error?:string,
+	value?:string
 }

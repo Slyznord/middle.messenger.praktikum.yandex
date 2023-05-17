@@ -1,7 +1,6 @@
 import BaseComponent from '../../block/block'
 import { render } from '../../renderDOM'
 import { props } from './types'
-import isEqual from '../../isEqual'
 
 export default class Route {
   private pathname:string
@@ -30,7 +29,7 @@ export default class Route {
   }
 
   public match (pathname:string):boolean {
-    return isEqual(pathname, this.pathname)
+    return this.pathname === pathname
   }
 
   public render ():void {

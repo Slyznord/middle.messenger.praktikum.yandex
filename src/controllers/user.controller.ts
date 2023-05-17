@@ -1,0 +1,79 @@
+import AuthApi, { signupParams, signinParams } from '../api/auth.api'
+import UserApi, { profile }  from '../api/user.api'
+import { router } from '../index'
+import store, { StoreEvents } from '../utils/store'
+
+const authAPI = new AuthApi()
+const userAPI = new UserApi()
+
+class UserController {
+  createUser ({ first_name, second_name, login, email, password, phone }:signupParams):void {
+    authAPI.signup({ first_name, second_name, login, email, password, phone })
+      .then((result:any) => {
+        store.set('user.id', result.id)
+        router.go('/messenger')
+      })
+      .catch(error => alert(error))
+  }
+
+  login ({ login, password }:signinParams):void {
+    authAPI.signin({ login, password })
+      .then(() => {
+        router.go('/messenger')
+      })
+      .catch(error => alert(error))
+  }
+
+  logout ():void {
+    authAPI.logout()
+      .then(() => {
+        router.go('/')
+      })
+      .catch(error => alert(error))
+  }
+
+  getUser ():Promise<unknown> {
+    return new Promise((resolve, reject) => {
+      authAPI.getUser()
+        .then((result:any) => {
+          const data = JSON.parse(result.response)
+
+          store.set('user', data)
+          store.emit(StoreEvents.Updated)
+          resolve(data)
+        })
+        .catch(error => reject(error))
+    })
+  }
+
+  updateUser (profile:profile):Promise<unknown> {
+    return new Promise((resolve, reject) => {
+      userAPI.updateProfile(profile)
+        .then((xhr:XMLHttpRequest) => {
+          store.set('user', JSON.parse(xhr.response))
+          store.emit(StoreEvents.Updated)
+          resolve('')
+        })
+        .catch(error => reject(error))
+    })
+  }
+
+  updatePassword ({ old_password, new_password }: { old_password: string, new_password:string }):Promise<unknown> {
+    return new Promise((resolve, reject) => {
+      userAPI.updatePassword(old_password, new_password)
+        .then((result) => {
+          resolve(result)
+        })
+        .catch(error => reject(error))
+    })
+  }
+
+  updateAvatar (file:File):Promise<unknown> {
+    const formData = new FormData()
+    formData.append('avatar', file)
+
+    return userAPI.updateAvatar(formData)
+  }
+}
+
+export default new UserController()

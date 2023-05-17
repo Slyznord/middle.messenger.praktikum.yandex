@@ -3,7 +3,7 @@ import template from './container.tmpl'
 import './container.scss'
 
 export default class Container extends BaseComponent {
-	constructor(props) {
+	constructor(props:any) {
 		super('div', props)
 	}
 

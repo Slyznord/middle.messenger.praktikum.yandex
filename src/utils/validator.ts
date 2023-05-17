@@ -1,7 +1,11 @@
 import validatorRulesName from '../constants/validatorRulesName'
 
+type Indexed = {
+	[key:string]: any
+}
+
 export default new class Validator {
-	private readonly rules:object = {
+	private readonly rules:Indexed = {
 		[validatorRulesName.NAME]: {
 			regexp: /^(?:[A-ZА-Я][a-zа-я]*)(?:-[A-ZА-Я][a-zа-я]*)?$/,
 			message: 'Первая буква должна быть заглавной, без пробелов и без цифр, нет спецсимволов (допустим только дефис)'
@@ -28,19 +32,19 @@ export default new class Validator {
 		}
 	}
 
-	public validate (element, rule):boolean {
+	public validate (element:HTMLInputElement, rule:string):boolean {
 		return this.rules[rule].regexp.test(element.value)
 	}
 
 	public validateAll(elements:HTMLInputElement[]):boolean {
-		return Array.from(elements).every(item => this.validate(item, item.getAttribute('validate-rule')))
+		return Array.from(elements).every(item => this.validate(item, item.getAttribute('validate-rule') as string))
 	}
 
 	public getInvalidInputs(elements:HTMLInputElement[]):HTMLInputElement[] {
-		return Array.from(elements).filter(item => !this.validate(item, item.getAttribute('validate-rule')))
+		return Array.from(elements).filter(item => !this.validate(item, item.getAttribute('validate-rule') as string))
 	}
 
-	public getErrorMessage (name) {
+	public getErrorMessage (name:string) {
 		return this.rules[name].message
 	}
 }

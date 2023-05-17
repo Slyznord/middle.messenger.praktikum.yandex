@@ -12,6 +12,9 @@ import validatorRulesName from '../../constants/validatorRulesName'
 import Validator from '../../utils/validator'
 import template from './registration.tmpl'
 
+import UserController from '../../controllers/user.controller'
+import { signupParams } from '../../api/auth.api'
+
 export default class Registration extends BaseComponent {
 	constructor() {
 		super('div', {
@@ -108,8 +111,8 @@ export default class Registration extends BaseComponent {
 				],
 				events: {
 					submit: (event:Event) => {
-						onSubmit(event).then(() => {
-							router.go('/messenger')
+						onSubmit(event).then((result:signupParams) => {
+							UserController.createUser(result)
 						})
 					}
 				}

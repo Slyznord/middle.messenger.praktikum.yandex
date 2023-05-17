@@ -3,7 +3,7 @@ import template from './dialog.tmpl'
 import './dialog.scss'
 
 export default class Dialog extends BaseComponent {
-  constructor(props) {
+  constructor(props:any) {
     super('article', props)
   }
 

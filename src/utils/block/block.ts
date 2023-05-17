@@ -17,7 +17,7 @@ class BaseComponent {
   private readonly id:string
 
   public props:any
-  private eventBus
+  protected eventBus
 
   constructor(tagName = 'div', propsAndChildren:object = { settings: {} }) {
     const { children, props } = this._getChildren(propsAndChildren)
@@ -85,7 +85,7 @@ class BaseComponent {
           return true
         }
 
-        return false
+        return true
       }
     })
   }
@@ -162,8 +162,8 @@ class BaseComponent {
     this.eventBus().emit(BaseComponent.EVENTS.FLOW_CDM, oldProps)
   }
 
+  // @ts-ignore
   public componentDidUpdate (oldProps:Props, newProps:Props):boolean {
-    console.log(oldProps, newProps)
     return true;
   }
 

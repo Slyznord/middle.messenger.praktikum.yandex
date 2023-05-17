@@ -9,14 +9,18 @@ import User from '../../modules/user/user'
 // utils
 import BaseComponent from '../../utils/block/block'
 import { onSubmit } from '../../utils/formEvents'
-import { router } from '../../index'
 import inputEvents from '../../utils/inputEvents'
 import validatorRulesName from '../../constants/validatorRulesName'
 import Validator from '../../utils/validator'
 import template from './settings.tmpl'
+import userController from '../../controllers/user.controller'
+import { profile } from '../../api/user.api'
+import store from '../../utils/store'
+import connect from '../../utils/connect'
+import { router } from '../../index'
 import './settings.scss'
 
-export default class Settings extends BaseComponent {
+class Settings extends BaseComponent {
 	constructor() {
 		const buttons = {
 			changeData: new Button('div', {
@@ -54,7 +58,7 @@ export default class Settings extends BaseComponent {
 				value: 'Выйти',
 				events: {
 					click: () => {
-						router.go('/')
+						userController.logout()
 					}
 				}
 			}),
@@ -97,248 +101,252 @@ export default class Settings extends BaseComponent {
 				}
 			})
 		}
-		const fields = {
-			email: {
-				input: new Input({
-					validateRule: validatorRulesName.EMAIL,
-					error: Validator.getErrorMessage(validatorRulesName.EMAIL),
-					wrapperClasses: 'flex flex-col items-start gap-1',
-					type: 'text',
-					name: 'email',
-					classes: 'input input_w-md input_fade',
-					events: inputEvents
-				}),
-				label: new Text({
-					classes: 'text-sm font-regular text-secondary',
-					value: 'test'
-				})
-			},
-			login: {
-				input: new Input({
-					validateRule: validatorRulesName.LOGIN,
-					error: Validator.getErrorMessage(validatorRulesName.LOGIN),
-					wrapperClasses: 'flex flex-col items-start gap-1',
-					type: 'text',
-					name: 'login',
-					classes: 'input input_w-md input_fade',
-					events: inputEvents
-				}),
-				label: new Text({
-					classes: 'text-sm font-regular text-secondary',
-					value: 'test'
-				})
-			},
-			firstName: {
-				input: new Input({
-					validateRule: validatorRulesName.NAME,
-					error: Validator.getErrorMessage(validatorRulesName.NAME),
-					wrapperClasses: 'flex flex-col items-start gap-1',
-					type: 'text',
-					name: 'first_name',
-					classes: 'input input_w-md input_fade',
-					events: inputEvents
-				}),
-				label: new Text({
-					classes: 'text-sm font-regular text-secondary',
-					value: 'test'
-				})
-			},
-			secondName: {
-				input: new Input({
-					validateRule: validatorRulesName.NAME,
-					error: Validator.getErrorMessage(validatorRulesName.NAME),
-					wrapperClasses: 'flex flex-col items-start gap-1',
-					type: 'text',
-					name: 'second_name',
-					classes: 'input input_w-md input_fade',
-					events: inputEvents
-				}),
-				label: new Text({
-					classes: 'text-sm font-regular text-secondary',
-					value: 'test'
-				})
-			},
-			displayName: {
-				input: new Input({
-					validateRule: validatorRulesName.LOGIN,
-					error: Validator.getErrorMessage(validatorRulesName.LOGIN),
-					wrapperClasses: 'flex flex-col items-start gap-1',
-					type: 'text',
-					name: 'display_name',
-					classes: 'input input_w-md input_fade',
-					events: inputEvents
-				}),
-				label: new Text({
-					classes: 'text-sm font-regular text-secondary',
-					value: 'test'
-				})
-			},
-			phone: {
-				input: new Input({
-					validateRule: validatorRulesName.PHONE,
-					error: Validator.getErrorMessage(validatorRulesName.PHONE),
-					wrapperClasses: 'flex flex-col items-start gap-1',
-					type: 'text',
-					name: 'phone',
-					classes: 'input input_w-md input_fade',
-					events: inputEvents
-				}),
-				label: new Text({
-					classes: 'text-sm font-regular text-secondary',
-					value: 'test'
-				})
-			}
-		}
-		const fieldsGroup = {
-			email: new Container({
-				classes: 'container_items-center container_justify-between container_py-sm container_border-b w-full',
-				content: [
-					new Text({
-						classes: 'text-sm font-medium text-black',
-						value: 'Почта'
-					}),
-					fields.email.label,
-					fields.email.input
-				],
-				wrapperClasses: 'w-full'
-			}),
-			login: new Container({
-				classes: 'container_items-center container_justify-between container_py-sm container_border-b w-full',
-				content: [
-					new Text({
-						classes: 'text-sm font-medium text-black',
-						value: 'Логин'
-					}),
-					fields.login.label,
-					fields.login.input
-				],
-				wrapperClasses: 'w-full'
-			}),
-			firstName: new Container({
-				classes: 'container_items-center container_justify-between container_py-sm container_border-b w-full',
-				content: [
-					new Text({
-						classes: 'text-sm font-medium text-black',
-						value: 'Имя'
-					}),
-					fields.firstName.label,
-					fields.firstName.input
-				],
-				wrapperClasses: 'w-full'
-			}),
-			secondName: new Container({
-				classes: 'container_items-center container_justify-between container_py-sm container_border-b w-full',
-				content: [
-					new Text({
-						classes: 'text-sm font-medium text-black',
-						value: 'Фамилия'
-					}),
-					fields.secondName.label,
-					fields.secondName.input
-				],
-				wrapperClasses: 'w-full'
-			}),
-			displayName: new Container({
-				classes: 'container_items-center container_justify-between container_py-sm container_border-b w-full',
-				content: [
-					new Text({
-						classes: 'text-sm font-medium text-black',
-						value: 'Имя в чате'
-					}),
-					fields.displayName.label,
-					fields.displayName.input
-				],
-				wrapperClasses: 'w-full'
-			}),
-			phone: new Container({
-				classes: 'container_items-center container_justify-between container_py-sm container_border-b w-full',
-				content: [
-					new Text({
-						classes: 'text-sm font-medium text-black',
-						value: 'Телефон'
-					}),
-					fields.phone.label,
-					fields.phone.input
-				],
-				wrapperClasses: 'w-full'
-			})
-		}
-		const password = {
-			old: new Input({
-				validateRule: validatorRulesName.PASSWORD,
-				error: Validator.getErrorMessage(validatorRulesName.PASSWORD),
-				wrapperClasses: 'flex flex-col items-start gap-1 w-full mb-4',
-				label: 'Старый пароль',
-				type: 'password',
-				name: 'old_password',
-				classes: 'input input_fade w-full',
-				events: inputEvents
-			}),
-			new: new Input({
-				validateRule: validatorRulesName.PASSWORD,
-				error: Validator.getErrorMessage(validatorRulesName.PASSWORD),
-				wrapperClasses: 'flex flex-col items-start gap-1 w-full',
-				label: 'Новый пароль',
-				type: 'password',
-				name: 'new_password',
-				classes: 'input input_fade w-full',
-				events: inputEvents
-			})
-		}
-		const userDataForm = new Form({
-			wrapperClasses: 'w-full',
-			fields: [
-				fieldsGroup.email,
-				fieldsGroup.login,
-				fieldsGroup.firstName,
-				fieldsGroup.secondName,
-				fieldsGroup.displayName,
-				fieldsGroup.phone
-			],
-			controls: [
-				buttons.changeData,
-				buttons.changePassword,
-				buttons.logout,
-				buttons.saveData,
-				buttons.savePassword,
-				buttons.cancelChangeData
-			],
-			events: {
-				submit: (event:Event) => {
-					onSubmit(event).then(() => {
-						buttons.changeData.show()
-						buttons.changePassword.show()
-						buttons.logout.show()
-						buttons.saveData.hide()
 
-						this.setProps({ isEditing: false })
-					})
+		super('div', {
+			isEditingData: false,
+			isEditingPassword: false,
+			buttonBack: new Button('div', {
+				classes: 'button_md button_primary settings__back',
+				value: 'Назад',
+				events: {
+					click: () => {
+						router.back()
+					}
 				}
-			}
-		})
-		const userPasswordForm = new Form({
-			wrapperClasses: 'w-full',
-			fields: [
-				password.old,
-				password.new
-			],
-			controls: [
-				buttons.savePassword,
-				buttons.cancelChangePassword
-			],
-			events: {
-				submit: (event:Event) => {
-					onSubmit(event).then(() => {
-						this.setProps({ isEditingPassword: false })
+			}),
+			form: [
+				new Form({
+					wrapperClasses: 'w-full',
+					fields: [
+						new Container({
+							name: 'email',
+							classes: 'container_items-center container_justify-between container_py-sm container_border-b w-full',
+							content: [
+								new Text({
+									classes: 'text-sm font-medium text-black',
+									value: 'Почта'
+								}),
+								new Text({
+									classes: 'text-sm font-regular text-secondary',
+									value: ''
+								}),
+								new Input({
+									validateRule: validatorRulesName.EMAIL,
+									error: Validator.getErrorMessage(validatorRulesName.EMAIL),
+									wrapperClasses: 'flex flex-col items-start gap-1',
+									type: 'text',
+									name: 'email',
+									classes: 'input input_w-md input_fade',
+									events: inputEvents,
+									value: ''
+								})
+							],
+							wrapperClasses: 'w-full'
+						}),
+						new Container({
+							name: 'login',
+							classes: 'container_items-center container_justify-between container_py-sm container_border-b w-full',
+							content: [
+								new Text({
+									classes: 'text-sm font-medium text-black',
+									value: 'Логин'
+								}),
+								new Text({
+									classes: 'text-sm font-regular text-secondary',
+									value: ''
+								}),
+								new Input({
+									validateRule: validatorRulesName.LOGIN,
+									error: Validator.getErrorMessage(validatorRulesName.LOGIN),
+									wrapperClasses: 'flex flex-col items-start gap-1',
+									type: 'text',
+									name: 'login',
+									classes: 'input input_w-md input_fade',
+									events: inputEvents,
+									value: ''
+								})
+							],
+							wrapperClasses: 'w-full'
+						}),
+						new Container({
+							name: 'first_name',
+							classes: 'container_items-center container_justify-between container_py-sm container_border-b w-full',
+							content: [
+								new Text({
+									classes: 'text-sm font-medium text-black',
+									value: 'Имя'
+								}),
+								new Text({
+									classes: 'text-sm font-regular text-secondary',
+									value: ''
+								}),
+								new Input({
+									validateRule: validatorRulesName.NAME,
+									error: Validator.getErrorMessage(validatorRulesName.NAME),
+									wrapperClasses: 'flex flex-col items-start gap-1',
+									type: 'text',
+									name: 'first_name',
+									classes: 'input input_w-md input_fade',
+									events: inputEvents,
+									value: ''
+								})
+							],
+							wrapperClasses: 'w-full'
+						}),
+						new Container({
+							name: 'second_name',
+							classes: 'container_items-center container_justify-between container_py-sm container_border-b w-full',
+							content: [
+								new Text({
+									classes: 'text-sm font-medium text-black',
+									value: 'Фамилия'
+								}),
+								new Text({
+									classes: 'text-sm font-regular text-secondary',
+									value: ''
+								}),
+								new Input({
+									validateRule: validatorRulesName.NAME,
+									error: Validator.getErrorMessage(validatorRulesName.NAME),
+									wrapperClasses: 'flex flex-col items-start gap-1',
+									type: 'text',
+									name: 'second_name',
+									classes: 'input input_w-md input_fade',
+									events: inputEvents,
+									value: ''
+								})
+							],
+							wrapperClasses: 'w-full'
+						}),
+						new Container({
+							name: 'display_name',
+							classes: 'container_items-center container_justify-between container_py-sm container_border-b w-full',
+							content: [
+								new Text({
+									classes: 'text-sm font-medium text-black',
+									value: 'Имя в чате'
+								}),
+								new Text({
+									classes: 'text-sm font-regular text-secondary',
+									value: ''
+								}),
+								new Input({
+									validateRule: validatorRulesName.LOGIN,
+									error: Validator.getErrorMessage(validatorRulesName.LOGIN),
+									wrapperClasses: 'flex flex-col items-start gap-1',
+									type: 'text',
+									name: 'display_name',
+									classes: 'input input_w-md input_fade',
+									events: inputEvents,
+									value: ''
+								})
+							],
+							wrapperClasses: 'w-full'
+						}),
+						new Container({
+							name: 'phone',
+							classes: 'container_items-center container_justify-between container_py-sm container_border-b w-full',
+							content: [
+								new Text({
+									classes: 'text-sm font-medium text-black',
+									value: 'Телефон'
+								}),
+								new Text({
+									classes: 'text-sm font-regular text-secondary',
+									value: ''
+								}),
+								new Input({
+									validateRule: validatorRulesName.PHONE,
+									error: Validator.getErrorMessage(validatorRulesName.PHONE),
+									wrapperClasses: 'flex flex-col items-start gap-1',
+									type: 'text',
+									name: 'phone',
+									classes: 'input input_w-md input_fade',
+									events: inputEvents,
+									value: ''
+								})
+							],
+							wrapperClasses: 'w-full'
+						})
+					],
+					controls: [
+						buttons.changeData,
+						buttons.changePassword,
+						buttons.logout,
+						buttons.saveData,
+						buttons.savePassword,
+						buttons.cancelChangeData
+					],
+					events: {
+						submit: (event:Event) => {
+							onSubmit(event).then((result:profile) => {
+								userController.updateUser(result).then(() => {
+									buttons.changeData.show()
+									buttons.changePassword.show()
+									buttons.logout.show()
+									buttons.saveData.hide()
+									buttons.cancelChangeData.hide()
 
-						buttons.changeData.show()
-						buttons.changePassword.show()
-						buttons.logout.show()
-						buttons.savePassword.hide()
-						buttons.cancelChangePassword.hide()
-					})
-				}
-			}
+									this.setProps({ isEditingData: false })
+									this.onLoadedUserData()
+								})
+							})
+						}
+					}
+				}),
+				new Form({
+					wrapperClasses: 'w-full',
+					fields: [
+						new Input({
+							validateRule: validatorRulesName.PASSWORD,
+							error: Validator.getErrorMessage(validatorRulesName.PASSWORD),
+							wrapperClasses: 'flex flex-col items-start gap-1 w-full mb-4',
+							label: 'Старый пароль',
+							type: 'password',
+							name: 'old_password',
+							classes: 'input input_fade w-full',
+							events: inputEvents,
+							value: ''
+						}),
+						new Input({
+							validateRule: validatorRulesName.PASSWORD,
+							error: Validator.getErrorMessage(validatorRulesName.PASSWORD),
+							wrapperClasses: 'flex flex-col items-start gap-1 w-full',
+							label: 'Новый пароль',
+							type: 'password',
+							name: 'new_password',
+							classes: 'input input_fade w-full',
+							events: inputEvents,
+							value: ''
+						})
+					],
+					controls: [
+						buttons.savePassword,
+						buttons.cancelChangePassword
+					],
+					events: {
+						submit: (event:Event) => {
+							onSubmit(event).then((result:any) => {
+								userController.updatePassword(result).then(() => {
+									this.setProps({ isEditingPassword: false })
+
+									buttons.changeData.show()
+									buttons.changePassword.show()
+									buttons.logout.show()
+									buttons.savePassword.hide()
+									buttons.cancelChangePassword.hide()
+								})
+							})
+						}
+					}
+				})
+			],
+			user: new User({
+				avatarClasses: 'user__avatar_lg',
+				usernameClasses: 'user__name_lg',
+				wrapperClasses: 'flex flex-col items-center gap-3'
+			}),
+			wrapperClasses: 'wrapper wrapper_items-center rounded-md wrapper_fade wrapper_py-xl wrapper_my-auto wrapper_mx-auto wrapper_w-settings gap-10 relative'
 		})
 
 		buttons.saveData.hide()
@@ -346,19 +354,8 @@ export default class Settings extends BaseComponent {
 		buttons.cancelChangeData.hide()
 		buttons.cancelChangePassword.hide()
 
-		super('div', {
-			isEditingData: false,
-			isEditingPassword: false,
-			form: [
-				userDataForm,
-				userPasswordForm
-			],
-			user: new User({
-				avatarClasses: 'user__avatar_lg',
-				usernameClasses: 'user__name_lg',
-				wrapperClasses: 'flex flex-col items-center gap-3'
-			}),
-			wrapperClasses: 'wrapper wrapper_items-center rounded-md wrapper_fade wrapper_py-xl wrapper_my-auto wrapper_mx-auto wrapper_w-settings gap-10'
+		userController.getUser().then(() => {
+			this.onLoadedUserData()
 		})
 	}
 
@@ -396,6 +393,18 @@ export default class Settings extends BaseComponent {
 		}
 	}
 
+	onLoadedUserData () {
+		const state = store.getState()
+
+		this.children.form[0].children.fields.forEach((container:any) => {
+			container.children.content.forEach((field:any, index:number) => {
+				if (!index) return
+
+				field.setProps({ value: (state as any).user[container.props.name] })
+			})
+		})
+	}
+
 	componentDidMount() {
 		this.onChangeUserData()
 		this.onChangeUserPassword()
@@ -411,3 +420,11 @@ export default class Settings extends BaseComponent {
 		return this.compile(template, this.props)
 	}
 }
+
+function mapUserToProps(state:any) {
+	return {
+		user: state.user
+	}
+}
+
+export default connect(Settings, mapUserToProps)

@@ -1,6 +1,6 @@
 import Validator from './validator'
 
-function validateInput (event) {
+function validateInput (event:any) {
 	const element = event.target
 	const rule = element.getAttribute('validate-rule')
 

@@ -11,6 +11,8 @@ import Validator from '../../utils/validator'
 import validatorRulesName from '../../constants/validatorRulesName'
 import { router } from '../../index'
 import template from './auth.tmpl'
+import userController from '../../controllers/user.controller'
+import { signinParams } from '../../api/auth.api'
 
 export default class Auth extends BaseComponent {
   constructor() {
@@ -57,8 +59,8 @@ export default class Auth extends BaseComponent {
         ],
         events: {
           submit: (event:Event) => {
-            onSubmit(event).then(() => {
-              router.go('/messenger')
+            onSubmit(event).then((result:signinParams) => {
+              userController.login(result)
             })
           }
         }

@@ -1,6 +1,6 @@
 import Validator from './validator'
 
-function onSubmit (event):Promise<string> {
+function onSubmit (event:any):Promise<object> {
   return new Promise((resolve):void => {
     event.preventDefault()
 
@@ -14,9 +14,9 @@ function onSubmit (event):Promise<string> {
       const invalidInputs = Validator.getInvalidInputs(inputs)
       invalidInputs.forEach(item => item.classList.add('input_error'))
     } else {
-      inputs.forEach(item => item.classList.remove('input_error'))
+      inputs.forEach((item:HTMLInputElement) => item.classList.remove('input_error'))
       console.log(preparedData)
-      resolve('')
+      resolve(preparedData as any)
     }
   })
 }
