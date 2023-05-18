@@ -1,7 +1,10 @@
 import validatorRulesName from '../constants/validatorRulesName'
 
 type Indexed = {
-	[key:string]: any
+	[key:string]: {
+		regexp: RegExp,
+		message: string
+	}
 }
 
 export default new class Validator {

@@ -31,7 +31,11 @@ export default class User extends BaseComponent {
 
     store.on(StoreEvents.Updated, () => {
       const state:any = store.getState()
-      this.setProps({ username: state.user.display_name, avatar: state.user.avatar })
+
+      this.setProps({
+        username: state.user.display_name || `${state.user.first_name} ${state.user.second_name}`,
+        avatar: state.user.avatar
+      })
     })
   }
 

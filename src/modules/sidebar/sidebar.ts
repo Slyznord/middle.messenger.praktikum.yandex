@@ -56,7 +56,8 @@ export default class Sidebar extends BaseComponent {
       wrapperClasses: 'wrapper menu gap-10',
       user: new User({
         events: {
-          click: () => {
+          click: (event:Event) => {
+            event.preventDefault()
             router.go('/settings')
           }
         },
