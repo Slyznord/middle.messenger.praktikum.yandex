@@ -4,12 +4,12 @@ import { route } from './types'
 
 class Router {
   private static __instance:Router;
-  public routes:any[]
+  public routes:Route[]
   public history:History
   private currentRoute:Route | null
   private readonly rootQuery:string
 
-  constructor(rootQuery: string, routes:any[]) {
+  constructor(rootQuery: string, routes:[]) {
     if (Router.__instance) {
       return Router.__instance
     }
@@ -73,7 +73,7 @@ class Router {
     route.render()
   }
 
-  private getRoute (pathname:string):Route {
+  private getRoute (pathname:string):Route | undefined {
     return this.routes.find(route => route.match(pathname))
   }
 }

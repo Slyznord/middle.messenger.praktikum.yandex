@@ -22,7 +22,7 @@
     flex-direction: column;
     justify-content: space-between;
     gap: 32px;
-    max-height: 90%;
+    max-height: 85%;
     height: 100%;
   }
 
@@ -104,5 +104,23 @@
     grid-template-columns: calc(100% - 48px) 32px;
     justify-content: space-between;
     align-items: center;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: auto;
+    padding: 8px 16px;
+    background: $secondary-2-color;
+    border-radius: 8px;
+  }
+
+  &__buttons-group {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 16px;
   }
 }

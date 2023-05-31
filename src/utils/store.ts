@@ -1,5 +1,6 @@
 import EventBus from './event-bus'
 import set from './set'
+import { Indexed } from './types'
 
 export enum StoreEvents {
   Updated = 'updated'
@@ -7,7 +8,7 @@ export enum StoreEvents {
 
 
 class Store extends EventBus {
-  private state:any = {
+  private state:Indexed = {
     user: null
   }
 

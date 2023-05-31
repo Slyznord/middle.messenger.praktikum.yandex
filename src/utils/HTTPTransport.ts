@@ -11,14 +11,14 @@ enum METHODS {
 
 type Options = {
   method: METHODS,
-  data?:any,
-  params?:any,
+  data?:Indexed,
+  params?:Indexed,
   isJSON?:boolean
 }
 
 type OptionsWithoutMethod = Omit<Options, 'method'>
 type HTTPWithoutOptions = (url:string, options?:OptionsWithoutMethod) => Promise<unknown>
-type HTTPMethod = (url:string, options?:any) => Promise<unknown>
+type HTTPMethod = (url:string, options?:Indexed) => Promise<unknown>
 
 class HTTPTransport {
   private readonly baseURL:string

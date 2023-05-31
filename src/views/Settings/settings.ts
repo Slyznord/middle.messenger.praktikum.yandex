@@ -19,6 +19,7 @@ import store from '../../utils/store'
 import connect from '../../utils/connect'
 import { router } from '../../index'
 import './settings.scss'
+import {Indexed} from "../../utils/types";
 
 class Settings extends BaseComponent {
 	constructor() {
@@ -326,7 +327,7 @@ class Settings extends BaseComponent {
 					],
 					events: {
 						submit: (event:Event) => {
-							onSubmit(event).then((result:any) => {
+							onSubmit(event).then((result: {  old_password:string, new_password:string }) => {
 								userController.updatePassword(result).then(() => {
 									this.setProps({ isEditingPassword: false })
 
@@ -361,12 +362,12 @@ class Settings extends BaseComponent {
 
 	onChangeUserData () {
 		if (this.props.isEditingData) {
-			this.children.form[0].children.fields.forEach((item:any) => {
+			this.children.form[0].children.fields.forEach((item:BaseComponent) => {
 				item.children.content[1].hide()
 				item.children.content[2].show()
 			})
 		} else {
-			this.children.form[0].children.fields.forEach((item:any) => {
+			this.children.form[0].children.fields.forEach((item:BaseComponent) => {
 				item.children.content[1].show()
 				item.children.content[2].hide()
 			})
@@ -380,14 +381,14 @@ class Settings extends BaseComponent {
 			this.children.form[0].hide()
 			this.children.form[1].show()
 
-			this.children.form[1].children.fields.forEach((item:any) => {
+			this.children.form[1].children.fields.forEach((item:BaseComponent) => {
 				item.show()
 			})
 		} else {
 			this.children.form[0].show()
 			this.children.form[1].hide()
 
-			this.children.form[1].children.fields.forEach((item:any) => {
+			this.children.form[1].children.fields.forEach((item:BaseComponent) => {
 				item.hide()
 			})
 		}
@@ -396,11 +397,11 @@ class Settings extends BaseComponent {
 	onLoadedUserData () {
 		const state = store.getState()
 
-		this.children.form[0].children.fields.forEach((container:any) => {
-			container.children.content.forEach((field:any, index:number) => {
+		this.children.form[0].children.fields.forEach((container:BaseComponent) => {
+			container.children.content.forEach((field:BaseComponent, index:number) => {
 				if (!index) return
 
-				field.setProps({ value: (state as any).user[container.props.name] })
+				field.setProps({ value: (state as Indexed).user[container.props.name] })
 			})
 		})
 	}
@@ -421,7 +422,7 @@ class Settings extends BaseComponent {
 	}
 }
 
-function mapUserToProps(state:any) {
+function mapUserToProps(state:Indexed) {
 	return {
 		user: state.user
 	}

@@ -4,13 +4,12 @@ import { router } from '../index'
 import store, { StoreEvents } from '../utils/store'
 
 const authAPI = new AuthApi()
-const userAPI = new UserApi()
 
 class UserController {
   createUser ({ first_name, second_name, login, email, password, phone }:signupParams):void {
     authAPI.signup({ first_name, second_name, login, email, password, phone })
-      .then((result:any) => {
-        store.set('user.id', result.id)
+      .then((result:object) => {
+        store.set('user.id', result['id' as keyof typeof result])
         router.go('/messenger')
       })
       .catch(error => alert(error))
@@ -35,8 +34,8 @@ class UserController {
   getUser ():Promise<unknown> {
     return new Promise((resolve, reject) => {
       authAPI.getUser()
-        .then((result:any) => {
-          const data = JSON.parse(result.response)
+        .then((result:object) => {
+          const data = JSON.parse(result['response' as keyof typeof result])
 
           store.set('user', data)
           store.emit(StoreEvents.Updated)
@@ -48,7 +47,7 @@ class UserController {
 
   updateUser (profile:profile):Promise<unknown> {
     return new Promise((resolve, reject) => {
-      userAPI.updateProfile(profile)
+      UserApi.updateProfile(profile)
         .then((xhr:XMLHttpRequest) => {
           store.set('user', JSON.parse(xhr.response))
           store.emit(StoreEvents.Updated)
@@ -60,7 +59,7 @@ class UserController {
 
   updatePassword ({ old_password, new_password }: { old_password: string, new_password:string }):Promise<unknown> {
     return new Promise((resolve, reject) => {
-      userAPI.updatePassword(old_password, new_password)
+      UserApi.updatePassword(old_password, new_password)
         .then((result) => {
           resolve(result)
         })
@@ -72,7 +71,7 @@ class UserController {
     const formData = new FormData()
     formData.append('avatar', file)
 
-    return userAPI.updateAvatar(formData)
+    return UserApi.updateAvatar(formData)
   }
 }
 

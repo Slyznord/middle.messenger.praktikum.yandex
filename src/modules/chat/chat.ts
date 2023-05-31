@@ -3,32 +3,63 @@ import template from './chat.tmpl'
 import { props } from './types'
 import './chat.scss'
 
-import ChatControl from './components/control/control'
+import Button from '../../components/button/button'
 import ChatHeader from './components/header/header'
-import Input from '../../components/input/input'
 import User from '../user/user'
+import UserList from '../userList/userList'
+import AddUser from '../addUserModal/addUser'
+
+import ChatApi from '../../api/chat.api'
 
 export default class Chat extends BaseComponent {
-  constructor(props:props) {
+  constructor(props:props = {}) {
     super('div', {
       ...props,
-      activeDialog: null,
-      control: new ChatControl({
-        input: new Input({
-          wrapperClasses: 'w-full',
-          type: 'text',
-          name: 'message',
-          classes: 'w-full input input_message',
-          placeholder: 'Сообщение...'
-        })
-      }),
-      dialogs: [],
       header: new ChatHeader({
         wrapperClasses: 'w-full',
         user: new User({
           wrapperClasses: 'user',
           avatarClasses: 'user__avatar_sm',
-        })
+        }),
+        buttons: [
+          new Button('div', {
+            classes: 'button button_sm button_primary',
+            value: 'Добавить пользователя',
+            events: {
+              click: () => {
+                this.children.addUserModal.setProps({ chatId: this.props.activeDialog })
+                this.children.addUserModal.show()
+              }
+            }
+          }),
+          new Button('div', {
+            classes: 'button button_sm button_outlined',
+            value: 'Список пользователей',
+            events: {
+              click: () => {
+                ChatApi.getChatUsers(this.props.activeDialog).then((xhr:XMLHttpRequest) => {
+                  if (!xhr.response) return
+
+                  this.children.userList.setProps({
+                    users: JSON.parse(xhr.response),
+                    chatId: this.props.activeDialog
+                  })
+                })
+
+                this.children.userList.show()
+              }
+            }
+          })
+        ]
+      }),
+      activeDialog: null,
+      dialogs: [],
+      userList: new UserList({
+        wrapperClasses: 'w-full',
+        users: []
+      }),
+      addUserModal: new AddUser({
+        wrapperClasses: 'w-full'
       }),
       wrapperClasses: 'chat'
     })
@@ -41,6 +72,9 @@ export default class Chat extends BaseComponent {
       this.children.header.hide()
       this.children.control.hide()
     }
+
+    this.children.userList.hide()
+    this.children.addUserModal.hide()
   }
 
   componentDidUpdate():boolean {
@@ -52,6 +86,14 @@ export default class Chat extends BaseComponent {
     } else {
       this.children.header.show()
       this.children.control.show()
+
+      setTimeout(() => {
+        const chat:HTMLElement | null = document.querySelector('.chat__dialog')
+
+        if (chat === null) return
+
+        chat.scrollTop = chat.scrollHeight
+      }, 1500)
     }
 
     return true

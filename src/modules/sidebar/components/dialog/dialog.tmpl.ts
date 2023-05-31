@@ -6,6 +6,7 @@ export default `
 
     <div class="flex flex-col flex-items-start gap-1">
       <span class="dialog__name">{{ name }}</span>
+
       {{#if message }}
         <span class="dialog__message">{{ message }}</span>
       {{^}}
@@ -16,5 +17,8 @@ export default `
 
   <div class="flex flex-col h-full">
     <span class="text-xs font-medium text-secondary">{{ time }}</span>
+    {{#if unread_count}}
+      <div class="dialog__unread-count">{{ unread_count }}</div>
+    {{/if}}
   </div>
 `;

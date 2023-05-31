@@ -2,6 +2,7 @@ import EventBus from '../event-bus'
 import { v4 } from 'uuid'
 import * as Handlebars from 'handlebars'
 import { Props } from './types'
+import { Indexed } from '../types'
 
 class BaseComponent {
   static EVENTS = {
@@ -11,12 +12,12 @@ class BaseComponent {
     FLOW_RENDER: 'flow:render'
   }
 
-  private element:HTMLElement
-  protected children:any
+  protected element:HTMLElement
+  protected children:Indexed
   private readonly meta:{ tagName:string, props:object }
   private readonly id:string
 
-  public props:any
+  public props:Indexed
   protected eventBus
 
   constructor(tagName = 'div', propsAndChildren:object = { settings: {} }) {
@@ -93,6 +94,8 @@ class BaseComponent {
   private _render ():void {
     const block = this.render()
 
+    if (block === null) return
+
     this.element.innerHTML = ''
     this.element.appendChild(block)
 
@@ -132,8 +135,8 @@ class BaseComponent {
   }
 
   private _getChildren (propsAndChildren:object): { children:object, props:object } {
-    const children:any = {}
-    const props:any = {}
+    const children:Indexed = {}
+    const props:Indexed = {}
 
     Object.entries(propsAndChildren).forEach(([key, value]) => {
       if (Array.isArray(value)) {
@@ -162,12 +165,12 @@ class BaseComponent {
     this.eventBus().emit(BaseComponent.EVENTS.FLOW_CDM, oldProps)
   }
 
-  // @ts-ignore
   public componentDidUpdate (oldProps:Props, newProps:Props):boolean {
+    console.log(oldProps, newProps)
     return true;
   }
 
-  public setProps = (nextProps:any):void => {
+  public setProps = (nextProps:Indexed):void => {
     if (!nextProps) {
       return;
     }
@@ -189,10 +192,10 @@ class BaseComponent {
     this.getContent().style.display = 'none'
   }
 
-  public render ():any {}
+  public render ():HTMLElement | void {}
 
   public compile (template:string, props:Props):DocumentFragment {
-    const propsAndStubs:any = { ...props }
+    const propsAndStubs:Indexed = { ...props }
     const compile = Handlebars.compile(template)
 
     Object.entries(this.children).forEach(([key, child]:[string, Array<BaseComponent> | BaseComponent]) => {

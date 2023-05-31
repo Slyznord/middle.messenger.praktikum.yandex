@@ -4,7 +4,7 @@ import { props } from './types'
 
 export default class Route {
   private pathname:string
-  private readonly blockClass:any
+  private readonly blockClass:BaseComponent
   private block:BaseComponent | null
   private props:props
 

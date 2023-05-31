@@ -1,11 +1,13 @@
+import { Indexed } from './types'
+
 class EventBus {
-  private readonly listeners:object
+  private readonly listeners:Indexed
 
   constructor() {
     this.listeners = {}
   }
 
-  on (event, callback):void {
+  on (event:string, callback:() => unknown | void):void {
     if (!this.listeners[event]) {
       this.listeners[event] = []
     }
@@ -13,20 +15,20 @@ class EventBus {
     this.listeners[event].push(callback)
   }
 
-  off (event, callback):void {
+  off (event:string, callback:() => unknown):void {
     if (!this.listeners[event]) {
       throw new Error(`Нет события: ${event}`)
     }
 
-    this.listeners[event] = this.listeners[event].filter(listener => listener !== callback)
+    this.listeners[event] = this.listeners[event].filter((listener:() => unknown) => listener !== callback)
   }
 
-  emit (event, ...args):void {
+  emit (event:string, ...args:[]):void {
     if (!this.listeners[event]) {
       throw new Error(`Нет события: ${event}`)
     }
 
-    this.listeners[event].forEach(listener => {
+    this.listeners[event].forEach((listener:(...args:[]) => unknown) => {
       listener(...args)
     })
   }

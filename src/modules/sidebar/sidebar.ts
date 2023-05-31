@@ -9,10 +9,29 @@ import Input from '../../components/input/input'
 import User from '../user/user'
 
 import ChatApi from '../../api/chat.api'
-import { router } from "../../index"
+import { router } from '../../index'
+
+type message = {
+  id: number,
+  title: string,
+  avatar: string,
+  unread_count: number,
+  last_message: {
+    user: {
+      first_name: string,
+      second_name: string,
+      avatar: string,
+      email: string,
+      login: string,
+      phone: string
+    },
+    time: string,
+    content: string
+  }
+}
 
 export default class Sidebar extends BaseComponent {
-  constructor(props:any) {
+  constructor(props:object = {}) {
     super('div', {
       ...props,
       control: new Button('div', {
@@ -35,8 +54,10 @@ export default class Sidebar extends BaseComponent {
             classes: 'search__input input_bg-secondary w-full',
             placeholder: 'Название чата',
             events: {
-              change: (event:any) => {
-                this.setProps({ chatName: event.target.value })
+              change: (event:Event) => {
+                const { target } = event
+
+                this.setProps({ chatName: (target as HTMLInputElement).value })
               }
             }
           }),
@@ -47,6 +68,7 @@ export default class Sidebar extends BaseComponent {
               click: () => {
                 ChatApi.createChat(this.props.chatName).then(() => {
                   this.children.chatParams.hide()
+                  this.updateChats()
                 })
               }
             }
@@ -65,18 +87,32 @@ export default class Sidebar extends BaseComponent {
       })
     })
 
+    this.updateChats()
+    this.children.chatParams.hide()
+  }
+
+  updateChats () {
     ChatApi.getChats().then((xhr:XMLHttpRequest) => {
       if (!xhr.response) return
 
-      this.children.dialogs = JSON.parse(xhr.response).map((item:any) => {
+      this.children.dialogs = JSON.parse(xhr.response).map((item:message) => {
+        let time = undefined
+
+        if (item.last_message?.time) {
+          const date = new Date(item.last_message.time)
+          time = `${date.getHours()}:${date.getMinutes()}`
+        }
+
         return new Dialog({
           wrapperClasses: 'dialog',
           avatar: item.avatar,
           name: item.title,
-          message: item.last_message,
+          message: item.last_message?.content,
+          time,
+          unread_count: item.unread_count,
           events: {
             click: () => {
-              console.log(item.id)
+              this.props.eventBus.emit('update:chat', item.id)
             }
           }
         })
@@ -84,8 +120,6 @@ export default class Sidebar extends BaseComponent {
 
       this.eventBus().emit('flow:components-did-update')
     })
-
-    this.children.chatParams.hide()
   }
 
   render () {

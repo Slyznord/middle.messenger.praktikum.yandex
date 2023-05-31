@@ -11,7 +11,7 @@ export type profile = {
 
 const httpTransport = new HTTPTransport('https://ya-praktikum.tech/api/v2/user')
 
-export default class UserApi {
+export default new class UserApi {
   updateProfile (profile:profile):Promise<unknown> {
     return httpTransport.put('/profile', { data: JSON.stringify(profile) })
   }
@@ -22,5 +22,11 @@ export default class UserApi {
 
   updatePassword (oldPassword:string, newPassword:string):Promise<unknown> {
     return httpTransport.put('/password', { data: JSON.stringify({ oldPassword, newPassword }) })
+  }
+
+  searchUserByLogin (login:string):Promise<unknown> {
+    return httpTransport.post('/search', {
+      data: JSON.stringify({ login })
+    })
   }
 }

@@ -3,8 +3,10 @@ import template from './user.tmpl'
 import './user.scss'
 
 import Input from '../../components/input/input'
+
 import store, { StoreEvents } from '../../utils/store'
 import userController from '../../controllers/user.controller'
+import { Indexed } from '../../utils/types'
 
 export default class User extends BaseComponent {
   constructor(props:object) {
@@ -13,8 +15,12 @@ export default class User extends BaseComponent {
       name: 'file',
       wrapperClasses: 'hidden',
       events: {
-        change: (event:any) => {
-          userController.updateAvatar(event.target.files[0]).then((xhr:XMLHttpRequest) => {
+        change: (event:Event) => {
+          const { target } = event
+
+          if (target === null) return
+
+          userController.updateAvatar((target as HTMLInputElement).files[0]).then((xhr:XMLHttpRequest) => {
             const user = JSON.parse(xhr.response)
 
             store.set('user.avatar', user.avatar)
@@ -30,7 +36,7 @@ export default class User extends BaseComponent {
     })
 
     store.on(StoreEvents.Updated, () => {
-      const state:any = store.getState()
+      const state:Indexed = store.getState()
 
       this.setProps({
         username: state.user.display_name || `${state.user.first_name} ${state.user.second_name}`,
