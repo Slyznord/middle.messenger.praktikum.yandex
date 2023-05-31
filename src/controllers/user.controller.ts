@@ -21,7 +21,11 @@ class UserController {
         localStorage.setItem('userIsLogged', true)
         router.go('/messenger')
       })
-      .catch(error => alert(error))
+      .catch(error => {
+        if (error.reason === 'User already in system') {
+          router.go('/messenger')
+        }
+      })
   }
 
   logout ():void {
