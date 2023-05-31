@@ -20,8 +20,4 @@ export const routes = [
 		path: '/settings',
 		component: Settings
 	}
-	// {
-	// 	path: '/error',
-	// 	component: ErrorPage
-	// }
 ]

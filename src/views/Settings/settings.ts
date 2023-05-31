@@ -19,7 +19,7 @@ import store from '../../utils/store'
 import connect from '../../utils/connect'
 import { router } from '../../index'
 import './settings.scss'
-import {Indexed} from "../../utils/types";
+import { Indexed } from '../../utils/types'
 
 class Settings extends BaseComponent {
 	constructor() {

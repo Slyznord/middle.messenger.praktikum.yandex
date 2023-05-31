@@ -69,6 +69,14 @@ export default class Auth extends BaseComponent {
     })
   }
 
+  componentDidMount () {
+    const isUserLogged:boolean = JSON.parse(localStorage.getItem('userIsLogged') || 'false')
+
+    if (isUserLogged) {
+      router.go('/messenger')
+    }
+  }
+
   render () {
     return this.compile(template, this.props)
   }

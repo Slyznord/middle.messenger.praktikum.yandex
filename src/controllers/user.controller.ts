@@ -18,6 +18,7 @@ class UserController {
   login ({ login, password }:signinParams):void {
     authAPI.signin({ login, password })
       .then(() => {
+        localStorage.setItem('userIsLogged', true)
         router.go('/messenger')
       })
       .catch(error => alert(error))
@@ -26,6 +27,7 @@ class UserController {
   logout ():void {
     authAPI.logout()
       .then(() => {
+        localStorage.setItem('userIsLogged', false)
         router.go('/')
       })
       .catch(error => alert(error))
