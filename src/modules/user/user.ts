@@ -20,12 +20,16 @@ export default class User extends BaseComponent {
 
           if (target === null) return
 
-          userController.updateAvatar((target as HTMLInputElement).files[0]).then((xhr:XMLHttpRequest) => {
-            const user = JSON.parse(xhr.response)
+          userController.updateAvatar((target as HTMLInputElement).files[0])
+            .then((xhr:XMLHttpRequest) => {
+              const user = JSON.parse(xhr.response)
 
-            store.set('user.avatar', user.avatar)
-            store.emit(StoreEvents.Updated)
-          })
+              store.set('user.avatar', user.avatar)
+              store.emit(StoreEvents.Updated)
+            })
+            .catch(error => {
+              throw new Error(error)
+            })
         }
       }
     })

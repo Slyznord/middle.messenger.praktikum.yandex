@@ -111,9 +111,13 @@ export default class Registration extends BaseComponent {
 				],
 				events: {
 					submit: (event:Event) => {
-						onSubmit(event).then((result:signupParams) => {
-							UserController.createUser(result)
-						})
+						onSubmit(event)
+							.then((result:signupParams) => {
+								UserController.createUser(result)
+							})
+							.catch(error => {
+								throw new Error(error)
+							})
 					}
 				}
 			})

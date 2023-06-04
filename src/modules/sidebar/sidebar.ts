@@ -66,10 +66,16 @@ export default class Sidebar extends BaseComponent {
             value: 'Создать',
             events: {
               click: () => {
-                ChatApi.createChat(this.props.chatName).then(() => {
-                  this.children.chatParams.hide()
-                  this.updateChats()
-                })
+                if (!this.props.chatName) alert('Название чата не может быть пустым')
+
+                ChatApi.createChat(this.props.chatName)
+                  .then(() => {
+                    this.children.chatParams.hide()
+                    this.updateChats()
+                  })
+                  .catch(error => {
+                    throw new Error(error)
+                  })
               }
             }
           })
@@ -92,34 +98,38 @@ export default class Sidebar extends BaseComponent {
   }
 
   updateChats () {
-    ChatApi.getChats().then((xhr:XMLHttpRequest) => {
-      if (!xhr.response) return
+    ChatApi.getChats()
+      .then((xhr:XMLHttpRequest) => {
+        if (!xhr.response) return
 
-      this.children.dialogs = JSON.parse(xhr.response).map((item:message) => {
-        let time = undefined
+        this.children.dialogs = JSON.parse(xhr.response).map((item:message) => {
+          let time = undefined
 
-        if (item.last_message?.time) {
-          const date = new Date(item.last_message.time)
-          time = `${date.getHours()}:${date.getMinutes()}`
-        }
-
-        return new Dialog({
-          wrapperClasses: 'dialog',
-          avatar: item.avatar,
-          name: item.title,
-          message: item.last_message?.content,
-          time,
-          unread_count: item.unread_count,
-          events: {
-            click: () => {
-              this.props.eventBus.emit('update:chat', item.id)
-            }
+          if (item.last_message?.time) {
+            const date = new Date(item.last_message.time)
+            time = `${date.getHours()}:${date.getMinutes()}`
           }
-        })
-      })
 
-      this.eventBus().emit('flow:components-did-update')
-    })
+          return new Dialog({
+            wrapperClasses: 'dialog',
+            avatar: item.avatar,
+            name: item.title,
+            message: item.last_message?.content,
+            time,
+            unread_count: item.unread_count,
+            events: {
+              click: () => {
+                this.props.eventBus.emit('update:chat', item.id)
+              }
+            }
+          })
+        })
+
+        this.eventBus().emit('flow:components-did-update')
+      })
+      .catch(error => {
+        throw new Error(error)
+      })
   }
 
   render () {

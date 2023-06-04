@@ -1,6 +1,7 @@
 import HTTPTransport from '../utils/HTTPTransport'
+import { BASE_URL } from './constants'
 
-const httpTransport = new HTTPTransport('https://ya-praktikum.tech/api/v2/auth')
+const httpTransport = new HTTPTransport(`${BASE_URL}/auth`)
 
 export type signupParams = {
   first_name: string,

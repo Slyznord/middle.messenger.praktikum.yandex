@@ -280,18 +280,26 @@ class Settings extends BaseComponent {
 					],
 					events: {
 						submit: (event:Event) => {
-							onSubmit(event).then((result:profile) => {
-								userController.updateUser(result).then(() => {
-									buttons.changeData.show()
-									buttons.changePassword.show()
-									buttons.logout.show()
-									buttons.saveData.hide()
-									buttons.cancelChangeData.hide()
+							onSubmit(event)
+								.then((result:profile) => {
+									userController.updateUser(result)
+										.then(() => {
+											buttons.changeData.show()
+											buttons.changePassword.show()
+											buttons.logout.show()
+											buttons.saveData.hide()
+											buttons.cancelChangeData.hide()
 
-									this.setProps({ isEditingData: false })
-									this.onLoadedUserData()
+											this.setProps({ isEditingData: false })
+											this.onLoadedUserData()
+										})
+										.catch(error => {
+											throw new Error(error)
+										})
 								})
-							})
+								.catch(error => {
+									throw new Error(error)
+								})
 						}
 					}
 				}),
@@ -327,17 +335,25 @@ class Settings extends BaseComponent {
 					],
 					events: {
 						submit: (event:Event) => {
-							onSubmit(event).then((result: {  old_password:string, new_password:string }) => {
-								userController.updatePassword(result).then(() => {
-									this.setProps({ isEditingPassword: false })
+							onSubmit(event)
+								.then((result: {  old_password:string, new_password:string }) => {
+									userController.updatePassword(result)
+										.then(() => {
+											this.setProps({ isEditingPassword: false })
 
-									buttons.changeData.show()
-									buttons.changePassword.show()
-									buttons.logout.show()
-									buttons.savePassword.hide()
-									buttons.cancelChangePassword.hide()
+											buttons.changeData.show()
+											buttons.changePassword.show()
+											buttons.logout.show()
+											buttons.savePassword.hide()
+											buttons.cancelChangePassword.hide()
+										})
+										.catch(error => {
+											throw new Error(error)
+										})
 								})
-							})
+								.catch(error => {
+									throw new Error(error)
+								})
 						}
 					}
 				})
@@ -355,9 +371,13 @@ class Settings extends BaseComponent {
 		buttons.cancelChangeData.hide()
 		buttons.cancelChangePassword.hide()
 
-		userController.getUser().then(() => {
-			this.onLoadedUserData()
-		})
+		userController.getUser()
+			.then(() => {
+				this.onLoadedUserData()
+			})
+			.catch(error => {
+				throw new Error(error)
+			})
 	}
 
 	onChangeUserData () {

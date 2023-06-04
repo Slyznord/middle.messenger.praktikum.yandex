@@ -1,4 +1,5 @@
 import HTTPTransport from '../utils/HTTPTransport'
+import { BASE_URL } from './constants'
 
 export type profile = {
   first_name: string,
@@ -9,7 +10,7 @@ export type profile = {
   phone: string
 }
 
-const httpTransport = new HTTPTransport('https://ya-praktikum.tech/api/v2/user')
+const httpTransport = new HTTPTransport(`${BASE_URL}/user`)
 
 export default new class UserApi {
   updateProfile (profile:profile):Promise<unknown> {

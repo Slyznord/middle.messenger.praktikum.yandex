@@ -22,29 +22,37 @@ export default class UserList extends BaseComponent {
             const { target } = event
 
             if ((target as HTMLInputElement).value.length > 3) {
-              UserApi.searchUserByLogin((target as HTMLInputElement).value).then((xhr:XMLHttpRequest) => {
-                if (!xhr.response) return
+              UserApi.searchUserByLogin((target as HTMLInputElement).value)
+                .then((xhr:XMLHttpRequest) => {
+                  if (!xhr.response) return
 
-                const response = JSON.parse(xhr.response)
-                this.setProps({ users: response })
+                  const response = JSON.parse(xhr.response)
+                  this.setProps({ users: response })
 
-                const users = Array.from(document.querySelectorAll('.add-user__item') || [])
+                  const users = Array.from(document.querySelectorAll('.add-user__item') || [])
 
-                if (!users.length) return
+                  if (!users.length) return
 
-                users.forEach((user:HTMLElement) => {
-                  user.querySelector('.add-user__icon')?.addEventListener('click', () => {
-                    const userId:string | null = user.getAttribute('data-user-id')
+                  users.forEach((user:HTMLElement) => {
+                    user.querySelector('.add-user__icon')?.addEventListener('click', () => {
+                      const userId:string | null = user.getAttribute('data-user-id')
 
-                    if (userId === null) return
+                      if (userId === null) return
 
-                    ChatApi.addUser(parseInt(userId), this.props.chatId).then((xhr:XMLHttpRequest) => {
-                      if (!xhr.response) return
-                      console.log(xhr.response)
+                      ChatApi.addUser(parseInt(userId), this.props.chatId)
+                        .then((xhr:XMLHttpRequest) => {
+                          if (!xhr.response) return
+                          console.log(xhr.response)
+                        })
+                        .catch(error => {
+                          throw new Error(error)
+                        })
                     })
                   })
                 })
-              })
+                .catch(error => {
+                  throw new Error(error)
+                })
             }
           }
         }

@@ -18,11 +18,12 @@ class UserController {
   login ({ login, password }:signinParams):void {
     authAPI.signin({ login, password })
       .then(() => {
-        localStorage.setItem('userIsLogged', true)
         router.go('/messenger')
       })
       .catch(error => {
-        if (error.reason === 'User already in system') {
+        const { reason } = JSON.parse(error)
+
+        if (reason === 'User already in system') {
           router.go('/messenger')
         }
       })
@@ -31,7 +32,6 @@ class UserController {
   logout ():void {
     authAPI.logout()
       .then(() => {
-        localStorage.setItem('userIsLogged', false)
         router.go('/')
       })
       .catch(error => alert(error))

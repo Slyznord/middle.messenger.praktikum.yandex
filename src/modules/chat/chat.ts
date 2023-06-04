@@ -37,16 +37,37 @@ export default class Chat extends BaseComponent {
             value: 'Список пользователей',
             events: {
               click: () => {
-                ChatApi.getChatUsers(this.props.activeDialog).then((xhr:XMLHttpRequest) => {
-                  if (!xhr.response) return
+                ChatApi.getChatUsers(this.props.activeDialog)
+                  .then((xhr:XMLHttpRequest) => {
+                    if (!xhr.response) return
 
-                  this.children.userList.setProps({
-                    users: JSON.parse(xhr.response),
-                    chatId: this.props.activeDialog
+                    this.children.userList.setProps({
+                      users: JSON.parse(xhr.response),
+                      chatId: this.props.activeDialog
+                    })
                   })
-                })
+                  .catch(error => {
+                    throw new Error(error)
+                  })
 
                 this.children.userList.show()
+              }
+            }
+          }),
+          new Button('div', {
+            classes: 'button button_sm button_primary button_error',
+            value: 'Удалить чат',
+            events: {
+              click: () => {
+                ChatApi.deleteChat(this.props.activeDialog)
+                  .then((xhr:XMLHttpRequest) => {
+                    if (!xhr.response) return
+
+                    this.setProps({ activeDialog: null })
+                  })
+                  .catch(error => {
+                    throw new Error(error)
+                  })
               }
             }
           })

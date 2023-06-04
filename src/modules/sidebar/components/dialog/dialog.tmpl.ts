@@ -1,7 +1,9 @@
 export default `
   <div class="flex flex-row items-center h-full gap-4">
     <div class="dialog__avatar">
-        <img src="{{ avatar }}">
+      {{#if avatar}}
+        <img src="https://ya-praktikum.tech/api/v2/resources/{{ avatar }}">
+      {{/if}}
     </div>
 
     <div class="flex flex-col flex-items-start gap-1">

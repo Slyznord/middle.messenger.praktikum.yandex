@@ -59,22 +59,18 @@ export default class Auth extends BaseComponent {
         ],
         events: {
           submit: (event:Event) => {
-            onSubmit(event).then((result:signinParams) => {
-              userController.login(result)
-            })
+            onSubmit(event)
+              .then((result:signinParams) => {
+                userController.login(result)
+              })
+              .catch(error => {
+                throw new Error(error)
+              })
           }
         }
       }),
       wrapperClasses: 'wrapper wrapper_fade wrapper_px-lg wrapper_py-lg wrapper_my-auto wrapper_mx-auto wrapper_items-center rounded-md gap-12'
     })
-  }
-
-  componentDidMount () {
-    const isUserLogged:boolean = JSON.parse(localStorage.getItem('userIsLogged') || 'false')
-
-    if (isUserLogged) {
-      router.go('/messenger')
-    }
   }
 
   render () {

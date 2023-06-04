@@ -26,10 +26,14 @@ export default class UserList extends BaseComponent {
         if (item === null) return
 
         item.querySelector('.user-list__remove').addEventListener('click', () => {
-          ChatApi.deleteUserFromChat(this.props.chatId, item.getAttribute('data-user-id')).then((xhr:XMLHttpRequest) => {
-            if (!xhr.response) return
-            item.remove()
-          })
+          ChatApi.deleteUserFromChat(this.props.chatId, item.getAttribute('data-user-id'))
+            .then((xhr:XMLHttpRequest) => {
+              if (!xhr.response) return
+              item.remove()
+            })
+            .catch(error => {
+              throw new Error(error)
+            })
         })
       })
     }
