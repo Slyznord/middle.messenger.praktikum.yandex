@@ -67,7 +67,7 @@ class HTTPTransport {
 
   private queryStringify (data:object):string {
     if (!isPlainObject(data)) {
-      throw new Error('input must be an object');
+      console.error('input must be an object')
     }
 
     return this.getParams(data).map(arr => arr.join('=')).join('&')

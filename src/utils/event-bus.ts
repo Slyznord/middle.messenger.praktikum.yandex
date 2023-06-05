@@ -17,7 +17,7 @@ class EventBus {
 
   off (event:string, callback:() => unknown):void {
     if (!this.listeners[event]) {
-      throw new Error(`Нет события: ${event}`)
+      console.error(`Нет события: ${event}`)
     }
 
     this.listeners[event] = this.listeners[event].filter((listener:() => unknown) => listener !== callback)
@@ -25,7 +25,7 @@ class EventBus {
 
   emit (event:string, ...args:[]):void {
     if (!this.listeners[event]) {
-      throw new Error(`Нет события: ${event}`)
+      console.error(`Нет события: ${event}`)
     }
 
     this.listeners[event].forEach((listener:(...args:[]) => unknown) => {

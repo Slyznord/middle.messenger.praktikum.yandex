@@ -75,7 +75,7 @@ class BaseComponent {
     return new Proxy(props, {
       set (target:Props, prop:string, value) {
         if (prop.indexOf('_') === 0) {
-          throw new Error('Отказано в доступе')
+          console.error('Отказано в доступе')
         }
 
         const oldProps = JSON.parse(JSON.stringify(target))

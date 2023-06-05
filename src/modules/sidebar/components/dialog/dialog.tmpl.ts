@@ -2,7 +2,7 @@ export default `
   <div class="flex flex-row items-center h-full gap-4">
     <div class="dialog__avatar">
       {{#if avatar}}
-        <img src="https://ya-praktikum.tech/api/v2/resources/{{ avatar }}">
+        <img src="https://ya-praktikum.tech/api/v2/resources/{{ avatar }}" alt="dialog image">
       {{/if}}
     </div>
 

@@ -64,7 +64,7 @@ export default class Auth extends BaseComponent {
                 userController.login(result)
               })
               .catch(error => {
-                throw new Error(error)
+                console.error(error)
               })
           }
         }

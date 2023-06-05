@@ -28,7 +28,7 @@ export default class User extends BaseComponent {
               store.emit(StoreEvents.Updated)
             })
             .catch(error => {
-              throw new Error(error)
+              console.error(error)
             })
         }
       }

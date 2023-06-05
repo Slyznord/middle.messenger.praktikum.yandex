@@ -9,6 +9,7 @@ export enum StoreEvents {
 
 class Store extends EventBus {
   private state:Indexed = {
+    chats: null,
     user: null
   }
 

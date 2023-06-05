@@ -294,11 +294,11 @@ class Settings extends BaseComponent {
 											this.onLoadedUserData()
 										})
 										.catch(error => {
-											throw new Error(error)
+											console.error(error)
 										})
 								})
 								.catch(error => {
-									throw new Error(error)
+									console.error(error)
 								})
 						}
 					}
@@ -348,11 +348,11 @@ class Settings extends BaseComponent {
 											buttons.cancelChangePassword.hide()
 										})
 										.catch(error => {
-											throw new Error(error)
+											console.error(error)
 										})
 								})
 								.catch(error => {
-									throw new Error(error)
+									console.error(error)
 								})
 						}
 					}
@@ -376,7 +376,7 @@ class Settings extends BaseComponent {
 				this.onLoadedUserData()
 			})
 			.catch(error => {
-				throw new Error(error)
+				console.error(error)
 			})
 	}
 

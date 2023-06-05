@@ -45,13 +45,13 @@ export default class UserList extends BaseComponent {
                           console.log(xhr.response)
                         })
                         .catch(error => {
-                          throw new Error(error)
+                          console.error(error)
                         })
                     })
                   })
                 })
                 .catch(error => {
-                  throw new Error(error)
+                  console.error(error)
                 })
             }
           }

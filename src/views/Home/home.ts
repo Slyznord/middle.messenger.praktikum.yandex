@@ -19,9 +19,9 @@ class Home extends BaseComponent {
   private socket:Socket
 
   constructor() {
-    const eventBus = new EventBus()
+    const sidebar = new Sidebar({})
 
-    eventBus.on('update:chat', (chatID:number):void => {
+    sidebar.eventBus().on('update:chat', (chatID:number):void => {
       ChatApi.getChatToken(chatID)
         .then((xhr:XMLHttpRequest) => {
           if (!xhr.response) return
@@ -46,7 +46,7 @@ class Home extends BaseComponent {
                 })
               })
               .catch(error => {
-                throw new Error(error)
+                console.error(error)
               })
           })
 
@@ -73,7 +73,7 @@ class Home extends BaseComponent {
           })
         })
         .catch(error => {
-          throw new Error(error)
+          console.error(error)
         })
     })
 
@@ -119,9 +119,7 @@ class Home extends BaseComponent {
           }
         })
       }),
-      sidebar: new Sidebar({
-        eventBus
-      })
+      sidebar
     })
 
     userController.getUser()

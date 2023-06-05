@@ -32,7 +32,7 @@ export default class UserList extends BaseComponent {
               item.remove()
             })
             .catch(error => {
-              throw new Error(error)
+              console.error(error)
             })
         })
       })

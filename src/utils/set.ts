@@ -7,7 +7,7 @@ export default function set(object: Indexed | unknown, path: string, value: unkn
   }
 
   if (typeof path !== 'string') {
-    throw new Error('path must be string');
+    console.error('path must be string')
   }
 
   const result = path.split('.').reduceRight<Indexed>((acc, key) => ({

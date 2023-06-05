@@ -116,7 +116,7 @@ export default class Registration extends BaseComponent {
 								UserController.createUser(result)
 							})
 							.catch(error => {
-								throw new Error(error)
+								console.error(error)
 							})
 					}
 				}

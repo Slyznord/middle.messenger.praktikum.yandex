@@ -58,7 +58,7 @@ export default class Socket {
   }
 
   protected onError (event:ErrorEvent) {
-    throw new Error(event.message)
+    console.error(event.message)
   }
 
   public send (data:messageData) {

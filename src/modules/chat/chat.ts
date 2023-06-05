@@ -10,6 +10,7 @@ import UserList from '../userList/userList'
 import AddUser from '../addUserModal/addUser'
 
 import ChatApi from '../../api/chat.api'
+import ChatController from '../../controllers/chat.controller'
 
 export default class Chat extends BaseComponent {
   constructor(props:props = {}) {
@@ -47,7 +48,7 @@ export default class Chat extends BaseComponent {
                     })
                   })
                   .catch(error => {
-                    throw new Error(error)
+                    console.error(error)
                   })
 
                 this.children.userList.show()
@@ -64,9 +65,13 @@ export default class Chat extends BaseComponent {
                     if (!xhr.response) return
 
                     this.setProps({ activeDialog: null })
+
+                    ChatController.updateChats().catch(error => {
+                      console.error(error)
+                    })
                   })
                   .catch(error => {
-                    throw new Error(error)
+                    console.error(error)
                   })
               }
             }

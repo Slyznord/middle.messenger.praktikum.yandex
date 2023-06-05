@@ -9,7 +9,10 @@ import Input from '../../components/input/input'
 import User from '../user/user'
 
 import ChatApi from '../../api/chat.api'
+import ChatController from '../../controllers/chat.controller'
 import { router } from '../../index'
+import connect from '../../utils/connect'
+import { Indexed } from '../../utils/types'
 
 type message = {
   id: number,
@@ -30,7 +33,7 @@ type message = {
   }
 }
 
-export default class Sidebar extends BaseComponent {
+class Sidebar extends BaseComponent {
   constructor(props:object = {}) {
     super('div', {
       ...props,
@@ -56,7 +59,6 @@ export default class Sidebar extends BaseComponent {
             events: {
               change: (event:Event) => {
                 const { target } = event
-
                 this.setProps({ chatName: (target as HTMLInputElement).value })
               }
             }
@@ -74,7 +76,7 @@ export default class Sidebar extends BaseComponent {
                     this.updateChats()
                   })
                   .catch(error => {
-                    throw new Error(error)
+                    console.error(error)
                   })
               }
             }
@@ -97,42 +99,59 @@ export default class Sidebar extends BaseComponent {
     this.children.chatParams.hide()
   }
 
-  updateChats () {
-    ChatApi.getChats()
-      .then((xhr:XMLHttpRequest) => {
-        if (!xhr.response) return
+  rewriteChats (chats:[]) {
+    this.children.dialogs = chats.map((item:message) => {
+      let time = undefined
 
-        this.children.dialogs = JSON.parse(xhr.response).map((item:message) => {
-          let time = undefined
+      if (item.last_message?.time) {
+        const date = new Date(item.last_message.time)
+        time = `${date.getHours()}:${date.getMinutes()}`
+      }
 
-          if (item.last_message?.time) {
-            const date = new Date(item.last_message.time)
-            time = `${date.getHours()}:${date.getMinutes()}`
+      return new Dialog({
+        wrapperClasses: 'dialog',
+        avatar: item.avatar,
+        name: item.title,
+        message: item.last_message?.content,
+        time,
+        unread_count: item.unread_count,
+        events: {
+          click: () => {
+            this.eventBus().emit('update:chat', item.id)
           }
+        }
+      })
+    })
+  }
 
-          return new Dialog({
-            wrapperClasses: 'dialog',
-            avatar: item.avatar,
-            name: item.title,
-            message: item.last_message?.content,
-            time,
-            unread_count: item.unread_count,
-            events: {
-              click: () => {
-                this.props.eventBus.emit('update:chat', item.id)
-              }
-            }
-          })
-        })
-
+  updateChats () {
+    ChatController.updateChats()
+      .then((chats:[]) => {
+        this.rewriteChats(chats)
         this.eventBus().emit('flow:components-did-update')
       })
       .catch(error => {
-        throw new Error(error)
+        console.error(error)
       })
+  }
+
+  componentDidUpdate(oldProps:Indexed, newProps:Indexed): boolean {
+    if (!newProps?.chats) return true
+
+    this.rewriteChats(newProps.chats)
+
+    return true
   }
 
   render () {
     return this.compile(template, this.props)
   }
 }
+
+function mapUserToProps(state:Indexed) {
+  return {
+    chats: state.chats
+  }
+}
+
+export default connect(Sidebar, mapUserToProps)
