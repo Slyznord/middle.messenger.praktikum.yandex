@@ -8,7 +8,7 @@ function connect (Component: typeof BaseComponent, mapStateToProps: (state:objec
     constructor(props:Indexed) {
       let state:object = mapStateToProps(store.getState())
 
-      super('div', { ...props, ...state })
+      super({ ...props, ...state })
 
       store.on(StoreEvents.Updated, () => {
         const newState = mapStateToProps(store.getState())

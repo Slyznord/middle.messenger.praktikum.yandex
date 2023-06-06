@@ -8,7 +8,6 @@ import BaseComponent from '../../utils/block/block'
 import template from './home.tmpl'
 import connect from '../../utils/connect'
 import userController from '../../controllers/user.controller'
-import EventBus from '../../utils/event-bus'
 import store from '../../utils/store'
 import { Indexed } from '../../utils/types'
 

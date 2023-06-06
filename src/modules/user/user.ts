@@ -7,9 +7,10 @@ import Input from '../../components/input/input'
 import store, { StoreEvents } from '../../utils/store'
 import userController from '../../controllers/user.controller'
 import { Indexed } from '../../utils/types'
+import connect from '../../utils/connect'
 
-export default class User extends BaseComponent {
-  constructor(props:object) {
+class User extends BaseComponent {
+  constructor(props:object = {}) {
     const input = new Input({
       type: 'file',
       name: 'file',
@@ -36,16 +37,7 @@ export default class User extends BaseComponent {
 
     super('div', {
       ...props,
-      input: input
-    })
-
-    store.on(StoreEvents.Updated, () => {
-      const state:Indexed = store.getState()
-
-      this.setProps({
-        username: state.user.display_name || `${state.user.first_name} ${state.user.second_name}`,
-        avatar: state.user.avatar
-      })
+      input
     })
   }
 
@@ -53,3 +45,11 @@ export default class User extends BaseComponent {
     return this.compile(template, this.props)
   }
 }
+
+function mapUserToProps(state:Indexed) {
+  return {
+    user: state.user
+  }
+}
+
+export default connect(User, mapUserToProps)

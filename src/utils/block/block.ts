@@ -3,6 +3,7 @@ import { v4 } from 'uuid'
 import * as Handlebars from 'handlebars'
 import { Props } from './types'
 import { Indexed } from '../types'
+import { isEqual } from '../isEqual'
 
 class BaseComponent {
   static EVENTS = {
@@ -166,8 +167,9 @@ class BaseComponent {
   }
 
   public componentDidUpdate (oldProps:Props, newProps:Props):boolean {
-    console.log(oldProps, newProps)
-    return true;
+    if (!(oldProps && newProps)) return false
+
+    return !isEqual(oldProps, newProps)
   }
 
   public setProps = (nextProps:Indexed):void => {
