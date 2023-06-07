@@ -1,4 +1,6 @@
-import Auth from './views/Auth'
-import { render } from './utils/renderDOM'
+import Router from './utils/router/router/router'
+import { routes } from './routes'
 
-render('#app', Auth)
+export const router = new Router('#app', routes)
+
+router.start()

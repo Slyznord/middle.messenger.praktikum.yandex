@@ -1,13 +1,16 @@
 import Validator from './validator'
 
-function validateInput (event) {
-	const element = event.target
-	const rule = element.getAttribute('validate-rule')
+function validateInput (event:Event) {
+	const { target } = event
 
-	if (Validator.validate(element, rule)) {
-		element.classList.remove('input_error')
+	if (target === null) return
+
+	const rule = (target as HTMLInputElement).getAttribute('validate-rule') || ''
+
+	if (Validator.validate((target as HTMLInputElement), rule)) {
+		(target as HTMLInputElement).classList.remove('input_error')
 	} else {
-		element.classList.add('input_error')
+		(target as HTMLInputElement).classList.add('input_error')
 	}
 }
 

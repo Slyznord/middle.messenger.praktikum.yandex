@@ -1,13 +1,23 @@
-import Auth from '../views/Auth/auth.tmpl';
-import ErrorPage from '../views/ErrorPage/errorPage.tmpl';
-import Home from '../views/Home/home.tmpl';
-import Registration from '../views/Registration/registration.tmpl';
-import Settings from '../views/Settings/settings.tmpl';
+import Auth from '../views/Auth/auth'
+import Home from '../views/Home/home'
+import Registration from '../views/Registration/registration'
+import Settings from '../views/Settings/settings'
 
-export default {
-	Auth,
-	ErrorPage,
-	Home,
-	Registration,
-	Settings
-}
+export const routes = [
+	{
+		path: '/',
+		component: Auth
+	},
+	{
+		path: '/sign-up',
+		component: Registration
+	},
+	{
+		path: '/messenger',
+		component: Home
+	},
+	{
+		path: '/settings',
+		component: Settings
+	}
+]

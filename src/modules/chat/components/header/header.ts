@@ -1,9 +1,9 @@
-import BaseComponent from '../../../../block/block'
+import BaseComponent from '../../../../utils/block/block'
 import template from './header.tmpl'
 import './header.scss'
 
 export default class Header extends BaseComponent {
-	constructor(props) {
+	constructor(props:object) {
 		super('div', props)
 	}
 

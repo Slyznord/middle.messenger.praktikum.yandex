@@ -1,10 +1,15 @@
 import Validator from './validator'
+import { Indexed } from './types'
 
-function onSubmit (event):Promise<string> {
+function onSubmit (event:Event):Promise<object> {
   return new Promise((resolve):void => {
     event.preventDefault()
 
-    const inputs = event.target.querySelectorAll('input')
+    const { target } = event
+
+    if (target === null) return
+
+    const inputs:HTMLInputElement[] = Array.from((target as HTMLElement).querySelectorAll('input') || [])
     const preparedData = Array.from(inputs).reduce((obj:object, item:HTMLInputElement) => {
       const key:string = item.getAttribute('name') || ''
       return { ...obj, [key]: item.value }
@@ -14,9 +19,9 @@ function onSubmit (event):Promise<string> {
       const invalidInputs = Validator.getInvalidInputs(inputs)
       invalidInputs.forEach(item => item.classList.add('input_error'))
     } else {
-      inputs.forEach(item => item.classList.remove('input_error'))
+      inputs.forEach((item:HTMLInputElement) => item.classList.remove('input_error'))
       console.log(preparedData)
-      resolve('')
+      resolve(preparedData as Indexed)
     }
   })
 }

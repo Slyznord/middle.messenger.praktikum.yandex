@@ -1,9 +1,9 @@
-import BaseComponent from '../../../../block/block'
+import BaseComponent from '../../../../utils/block/block'
 import template from './dialog.tmpl'
 import './dialog.scss'
 
 export default class Dialog extends BaseComponent {
-  constructor(props) {
+  constructor(props:object) {
     super('article', props)
   }
 

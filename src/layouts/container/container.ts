@@ -1,9 +1,9 @@
-import BaseComponent from '../../block/block'
+import BaseComponent from '../../utils/block/block'
 import template from './container.tmpl'
 import './container.scss'
 
 export default class Container extends BaseComponent {
-	constructor(props) {
+	constructor(props:object) {
 		super('div', props)
 	}
 

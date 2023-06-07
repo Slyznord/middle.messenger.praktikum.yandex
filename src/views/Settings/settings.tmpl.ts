@@ -5,5 +5,7 @@ export default `
 		<div class="flex w-full">
 			{{{ form }}}
 		</div>
+
+    {{{ buttonBack }}}
 	</div>
 `

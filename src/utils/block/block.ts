@@ -1,7 +1,9 @@
-import EventBus from '../utils/event-bus'
+import EventBus from '../event-bus'
 import { v4 } from 'uuid'
 import * as Handlebars from 'handlebars'
 import { Props } from './types'
+import { Indexed } from '../types'
+import { isEqual } from '../isEqual'
 
 class BaseComponent {
   static EVENTS = {
@@ -11,13 +13,13 @@ class BaseComponent {
     FLOW_RENDER: 'flow:render'
   }
 
-  private element:HTMLElement
-  protected children
+  protected element:HTMLElement
+  protected children:Indexed
   private readonly meta:{ tagName:string, props:object }
   private readonly id:string
 
-  public props:Props
-  private eventBus
+  public props:Indexed
+  protected eventBus
 
   constructor(tagName = 'div', propsAndChildren:object = { settings: {} }) {
     const { children, props } = this._getChildren(propsAndChildren)
@@ -54,7 +56,7 @@ class BaseComponent {
     const { wrapperClasses = null } = this.props
 
     if (wrapperClasses) {
-      wrapperClasses.split(' ').forEach(item => { this.element.classList.add(item) })
+      wrapperClasses.split(' ').forEach((item:string) => { this.element.classList.add(item) })
     }
   }
 
@@ -74,7 +76,7 @@ class BaseComponent {
     return new Proxy(props, {
       set (target:Props, prop:string, value) {
         if (prop.indexOf('_') === 0) {
-          throw new Error('Отказано в доступе')
+          console.error('Отказано в доступе')
         }
 
         const oldProps = JSON.parse(JSON.stringify(target))
@@ -85,13 +87,15 @@ class BaseComponent {
           return true
         }
 
-        return false
+        return true
       }
     })
   }
 
   private _render ():void {
     const block = this.render()
+
+    if (block === null) return
 
     this.element.innerHTML = ''
     this.element.appendChild(block)
@@ -132,8 +136,8 @@ class BaseComponent {
   }
 
   private _getChildren (propsAndChildren:object): { children:object, props:object } {
-    const children:any = {}
-    const props:any = {}
+    const children:Indexed = {}
+    const props:Indexed = {}
 
     Object.entries(propsAndChildren).forEach(([key, value]) => {
       if (Array.isArray(value)) {
@@ -163,11 +167,12 @@ class BaseComponent {
   }
 
   public componentDidUpdate (oldProps:Props, newProps:Props):boolean {
-    console.log(oldProps, newProps)
-    return true;
+    if (!(oldProps && newProps)) return false
+
+    return !isEqual(oldProps, newProps)
   }
 
-  public setProps = (nextProps:Props):void => {
+  public setProps = (nextProps:Indexed):void => {
     if (!nextProps) {
       return;
     }
@@ -189,10 +194,10 @@ class BaseComponent {
     this.getContent().style.display = 'none'
   }
 
-  public render ():any {}
+  public render ():HTMLElement | void {}
 
   public compile (template:string, props:Props):DocumentFragment {
-    const propsAndStubs:any = { ...props }
+    const propsAndStubs:Indexed = { ...props }
     const compile = Handlebars.compile(template)
 
     Object.entries(this.children).forEach(([key, child]:[string, Array<BaseComponent> | BaseComponent]) => {

@@ -35,6 +35,17 @@
     color: #fff;
   }
 
+  &_outlined {
+    background: #FFF;
+    color: $primary-color;
+    border: thin solid $primary-color;
+
+    &:hover {
+      background: $primary-color;
+      color: #FFF;
+    }
+  }
+
   &_error {
     background: $error-color;
     color: #fff;
