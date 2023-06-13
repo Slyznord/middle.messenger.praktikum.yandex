@@ -1,7 +1,6 @@
 import EventBus from '../event-bus'
 import { v4 } from 'uuid'
 import * as Handlebars from 'handlebars'
-import { Props } from './types'
 import { Indexed } from '../types'
 import { isEqual } from '../isEqual'
 
@@ -14,14 +13,14 @@ class BaseComponent {
   }
 
   protected element:HTMLElement
-  protected children:Indexed
+  public children:Indexed<BaseComponent>
   private readonly meta:{ tagName:string, props:object }
   private readonly id:string
 
   public props:Indexed
   protected eventBus
 
-  constructor(tagName = 'div', propsAndChildren:object = { settings: {} }) {
+  constructor(tagName = 'div', propsAndChildren:Indexed = { settings: {} }) {
     const { children, props } = this._getChildren(propsAndChildren)
     const eventBus = new EventBus()
 
@@ -53,7 +52,7 @@ class BaseComponent {
   }
 
   private _addParentClass ():void {
-    const { wrapperClasses = null } = this.props
+    const wrapperClasses = <string>this.props.wrapperClasses || ''
 
     if (wrapperClasses) {
       wrapperClasses.split(' ').forEach((item:string) => { this.element.classList.add(item) })
@@ -63,18 +62,18 @@ class BaseComponent {
   private _createDocumentElement (tagName:string):HTMLElement {
     const element = document.createElement(tagName)
 
-    if (this.props.settings?.withInternalID) {
+    if ((this.props.settings as Indexed<object>)?.withInternalID) {
       element.setAttribute('data-id', this.id)
     }
 
     return element
   }
 
-  private _makePropsProxy (props:object):Props {
+  private _makePropsProxy (props:Indexed):Indexed {
     const self = this
 
     return new Proxy(props, {
-      set (target:Props, prop:string, value) {
+      set (target:ProxyHandler<object>, prop:string, value) {
         if (prop.indexOf('_') === 0) {
           console.error('Отказано в доступе')
         }
@@ -83,6 +82,7 @@ class BaseComponent {
 
         if (target[prop as keyof typeof target] !== value) {
           target[prop as keyof typeof target] = value;
+          // @ts-ignore
           self.eventBus().emit(BaseComponent.EVENTS.FLOW_CDU, oldProps, target)
           return true
         }
@@ -93,7 +93,7 @@ class BaseComponent {
   }
 
   private _render ():void {
-    const block = this.render()
+    const block = <DocumentFragment>this.render()
 
     if (block === null) return
 
@@ -110,7 +110,7 @@ class BaseComponent {
     this.componentDidMount();
   }
 
-  private _componentDidUpdate (oldProps:Props, newProps:Props):void {
+  private _componentDidUpdate (oldProps:Indexed, newProps:Indexed):void {
     const response = this.componentDidUpdate(oldProps, newProps)
 
     if (response) {
@@ -119,7 +119,7 @@ class BaseComponent {
   }
 
   private _addEvents ():void {
-    const { events = {} } = this.props
+    const events = this.props?.events || {}
 
     Object.keys(events).forEach(eventName => {
       const element = this.element.querySelector(`[${eventName}]`) || this.element
@@ -128,18 +128,18 @@ class BaseComponent {
   }
 
   private _removeEvents ():void {
-    const { events = {} } = this.props
+    const events = this.props?.events || {}
 
     Object.keys(events).forEach(eventName => {
       this.element.removeEventListener(eventName, events[eventName as keyof typeof events])
     })
   }
 
-  private _getChildren (propsAndChildren:object): { children:object, props:object } {
-    const children:Indexed = {}
+  private _getChildren (propsAndChildren:Indexed): { children:Indexed<BaseComponent>, props:Indexed } {
+    const children:Indexed<BaseComponent> = {}
     const props:Indexed = {}
 
-    Object.entries(propsAndChildren).forEach(([key, value]) => {
+    Object.entries(propsAndChildren).forEach(([key, value]:[key:string, value:BaseComponent]) => {
       if (Array.isArray(value)) {
         const isElementsInstanceBaseComponent = value.every(item => item instanceof BaseComponent)
 
@@ -162,11 +162,12 @@ class BaseComponent {
 
   public componentDidMount ():void {}
 
-  public dispatchComponentDidMount (oldProps:Props):void {
+  public dispatchComponentDidMount (oldProps?:Indexed):void {
+    // @ts-ignore
     this.eventBus().emit(BaseComponent.EVENTS.FLOW_CDM, oldProps)
   }
 
-  public componentDidUpdate (oldProps:Props, newProps:Props):boolean {
+  public componentDidUpdate (oldProps:Indexed, newProps:Indexed):boolean {
     if (!(oldProps && newProps)) return false
 
     return !isEqual(oldProps, newProps)
@@ -194,9 +195,9 @@ class BaseComponent {
     this.getContent().style.display = 'none'
   }
 
-  public render ():HTMLElement | void {}
+  public render ():DocumentFragment | void {}
 
-  public compile (template:string, props:Props):DocumentFragment {
+  public compile (template:string, props:Indexed):DocumentFragment {
     const propsAndStubs:Indexed = { ...props }
     const compile = Handlebars.compile(template)
 

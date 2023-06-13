@@ -1,6 +1,6 @@
 import EventBus from './event-bus'
 import set from './set'
-import { Indexed } from './types'
+import { State } from './types'
 
 export enum StoreEvents {
   Updated = 'updated'
@@ -8,12 +8,12 @@ export enum StoreEvents {
 
 
 class Store extends EventBus {
-  private state:Indexed = {
+  private state:State = {
     chats: null,
     user: null
   }
 
-  public getState ():object {
+  public getState ():State {
     return JSON.parse(JSON.stringify(this.state))
   }
 

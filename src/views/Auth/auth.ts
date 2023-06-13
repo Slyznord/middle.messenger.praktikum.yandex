@@ -73,7 +73,7 @@ export default class Auth extends BaseComponent {
     })
   }
 
-  render () {
+  render ():DocumentFragment {
     return this.compile(template, this.props)
   }
 }

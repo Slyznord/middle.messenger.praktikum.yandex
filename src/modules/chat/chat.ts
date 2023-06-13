@@ -38,7 +38,7 @@ export default class Chat extends BaseComponent {
             value: 'Список пользователей',
             events: {
               click: () => {
-                ChatApi.getChatUsers(this.props.activeDialog)
+                ChatApi.getChatUsers(this.props.activeDialog as number)
                   .then((xhr:XMLHttpRequest) => {
                     if (!xhr.response) return
 
@@ -60,7 +60,7 @@ export default class Chat extends BaseComponent {
             value: 'Удалить чат',
             events: {
               click: () => {
-                ChatApi.deleteChat(this.props.activeDialog)
+                ChatApi.deleteChat(this.props.activeDialog as number)
                   .then((xhr:XMLHttpRequest) => {
                     if (!xhr.response) return
 

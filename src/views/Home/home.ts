@@ -8,8 +8,9 @@ import BaseComponent from '../../utils/block/block'
 import template from './home.tmpl'
 import connect from '../../utils/connect'
 import userController from '../../controllers/user.controller'
-import store from '../../utils/store'
+import store, {StoreEvents} from '../../utils/store'
 import { Indexed } from '../../utils/types'
+import { State } from '../../utils/types'
 
 import ChatApi from '../../api/chat.api'
 import Socket from '../../api/socket.api'
@@ -20,7 +21,8 @@ class Home extends BaseComponent {
   constructor() {
     const sidebar = new Sidebar({})
 
-    sidebar.eventBus().on('update:chat', (chatID:number):void => {
+    // @ts-ignore
+    sidebar.eventBus().on('update:chat', (chatID:number) => {
       ChatApi.getChatToken(chatID)
         .then((xhr:XMLHttpRequest) => {
           if (!xhr.response) return
@@ -29,7 +31,10 @@ class Home extends BaseComponent {
           }
 
           const token = JSON.parse(xhr.response).token
-          const state:Indexed = store.getState()
+          const state:State = store.getState()
+
+          if (!state.user) return
+
           this.socket = new Socket(`wss://ya-praktikum.tech/ws/chats/${state.user.id}/${chatID}/${token}`)
 
           this.socket.eventBus().on('flow:socket-did-open', () => {
@@ -49,7 +54,8 @@ class Home extends BaseComponent {
               })
           })
 
-          this.socket.eventBus().on('flow:socket-get-message', (data:object) => {
+          // @ts-ignore
+          this.socket.eventBus().on('flow:socket-get-message', (data) => {
             if (!Array.isArray(data)) return
 
             const sortedMessages = data.sort((a:Indexed<string>, b:Indexed<string>):number => {
@@ -59,6 +65,7 @@ class Home extends BaseComponent {
               const date = new Date(item.time)
               const getFormattedDate = (date:number) => date.toString().length > 1 ? date : `0${date}`
 
+              // @ts-ignore
               item.classes = item.user_id === state.user.id ? 'chat__message_receiver' : 'chat__message_sender'
               item.time = `${getFormattedDate(date.getHours())}:${getFormattedDate(date.getMinutes())} ${getFormattedDate(date.getDate())}.${getFormattedDate(date.getMonth() + 1)}.${date.getFullYear()}`
 
@@ -122,6 +129,13 @@ class Home extends BaseComponent {
     })
 
     userController.getUser()
+      .then((result:Indexed) => {
+        store.set('user', result)
+        store.emit(StoreEvents.Updated)
+      })
+      .catch(error => {
+        console.error(error)
+      })
   }
 
   render () {

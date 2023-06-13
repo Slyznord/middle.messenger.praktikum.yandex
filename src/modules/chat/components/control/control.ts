@@ -1,8 +1,9 @@
 import BaseComponent from '../../../../utils/block/block'
 import template from './control.tmpl'
+import { Indexed } from '../../../../utils/types'
 
 export default class Control extends BaseComponent {
-	constructor(props:object) {
+	constructor(props:Indexed) {
 		super('div', props)
 	}
 

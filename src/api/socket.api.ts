@@ -12,7 +12,7 @@ export default class Socket {
   }
 
   private ws:WebSocket
-  private readonly pingId:number
+  private readonly pingId:ReturnType<typeof setInterval>
   public eventBus
 
   constructor(url:string) {
@@ -53,6 +53,7 @@ export default class Socket {
   }
 
   protected onMessage (event:MessageEvent) {
+    // @ts-ignore
     this.eventBus().emit(Socket.EVENTS.FLOW_SGM, JSON.parse(event.data))
     console.log(`Message: ${event.data}`)
   }

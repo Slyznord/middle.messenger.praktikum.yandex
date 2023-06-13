@@ -9,6 +9,7 @@
   cursor: pointer;
 
   &__avatar {
+    display: flex;
     height: 65px;
     width: 65px;
     border-radius: 50%;

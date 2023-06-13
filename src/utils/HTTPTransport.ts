@@ -65,7 +65,7 @@ class HTTPTransport {
     return result;
   }
 
-  private queryStringify (data:object):string {
+  private queryStringify (data:Indexed):string {
     if (!isPlainObject(data)) {
       console.error('input must be an object')
     }
@@ -101,7 +101,7 @@ class HTTPTransport {
       if (method === METHODS.GET || !data) {
         xhr.send(this.queryStringify(params))
       } else {
-        xhr.send(data)
+        xhr.send((data as unknown as XMLHttpRequestBodyInit))
       }
     })
   }
