@@ -6,7 +6,7 @@
   "scripts": {
     "serve": "webpack-dev-server --config webpack.config.js --hot",
     "build": "webpack --config ./webpack.config.js",
-    "test": "./node_modules/.bin/mocha",
+    "test": "mocha",
     "prepare": "husky install",
     "docker:build": "docker build -t lesson .",
     "docker:run": "docker stop lesson && docker rm lesson && docker run -p 4000:3000 -v C:\\Users\\Maikl\\Desktop\\middle.messenger.praktikum.yandex:/var/www/middle.messenger.praktikum.yandex --name=lesson lesson"
