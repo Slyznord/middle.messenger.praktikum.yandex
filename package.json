@@ -9,13 +9,15 @@
     "test": "mocha",
     "prepare": "husky install",
     "docker:build": "docker build -t lesson .",
-    "docker:run": "docker stop lesson && docker rm lesson && docker run -p 4000:3000 -v C:\\Users\\Maikl\\Desktop\\middle.messenger.praktikum.yandex:/var/www/middle.messenger.praktikum.yandex --name=lesson lesson"
+    "docker:run": "docker stop lesson && docker rm lesson && docker run -p 4000:3000 -v C:\\Users\\Maikl\\Desktop\\middle.messenger.praktikum.yandex:/var/www/middle.messenger.praktikum.yandex --name=lesson lesson",
+    "eslint": "npx eslint --ext .ts",
+    "stylelint": "npx stylelint \"**/*.scss\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@anikin/parcel-transformer-handlebars": "1.0.9",
+    "@anikin/parcel-transformer-handlebars": "^1.0.2",
     "@babel/core": "^7.22.5",
     "@babel/register": "^7.22.5",
     "@types/chai": "4.3.5",
