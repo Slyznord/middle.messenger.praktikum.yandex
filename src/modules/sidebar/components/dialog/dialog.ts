@@ -1,9 +1,10 @@
 import BaseComponent from '../../../../utils/block/block'
 import template from './dialog.tmpl'
 import './dialog.scss'
+import { Indexed } from '../../../../utils/types'
 
 export default class Dialog extends BaseComponent {
-  constructor(props:object) {
+  constructor(props:Indexed) {
     super('article', props)
   }
 

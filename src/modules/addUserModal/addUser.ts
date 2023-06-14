@@ -39,7 +39,7 @@ export default class UserList extends BaseComponent {
 
                       if (userId === null) return
 
-                      ChatApi.addUser(parseInt(userId), this.props.chatId)
+                      ChatApi.addUser(parseInt(userId), this.props.chatId as number)
                         .then((xhr:XMLHttpRequest) => {
                           if (!xhr.response) return
                           console.log(xhr.response)

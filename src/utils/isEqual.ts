@@ -1,7 +1,7 @@
 import { Indexed } from './types'
 import { isArrayOrObject } from './isArray'
 
-export function isEqual (lhs:Indexed, rhs:Indexed) {
+export function isEqual (lhs:Indexed | [], rhs:Indexed) {
   if (Object.keys(lhs).length !== Object.keys(rhs).length) {
     return false
   }
@@ -10,7 +10,7 @@ export function isEqual (lhs:Indexed, rhs:Indexed) {
     const rightValue = rhs[key]
 
     if (isArrayOrObject(value) && isArrayOrObject(rightValue)) {
-      if (isEqual(value, rightValue)) {
+      if (isEqual(value, (rightValue as Indexed))) {
         continue
       }
 

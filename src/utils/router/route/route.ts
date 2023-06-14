@@ -1,14 +1,16 @@
 import BaseComponent from '../../block/block'
+// const BaseComponent = require('../../block/block')
 import { render } from '../../renderDOM'
 import { props } from './types'
+import {Indexed} from "../../types";
 
 export default class Route {
-  private pathname:string
-  private readonly blockClass:BaseComponent
+  public pathname:string
+  private readonly blockClass:Indexed<unknown>
   private block:BaseComponent | null
   private props:props
 
-  constructor(pathname:string, component:BaseComponent, props:props) {
+  constructor(pathname:string, component:Indexed<unknown>, props:props) {
     this.pathname = pathname
     this.blockClass = component
     this.block = null
@@ -33,7 +35,8 @@ export default class Route {
   }
 
   public render ():void {
+    // @ts-ignore
     this.block = new this.blockClass()
-    render(this.props.rootQuery, this.block)
+    render(this.props.rootQuery, (this.block as BaseComponent))
   }
 }

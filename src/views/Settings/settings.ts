@@ -291,7 +291,7 @@ class Settings extends BaseComponent {
 											buttons.cancelChangeData.hide()
 
 											this.setProps({ isEditingData: false })
-											this.onLoadedUserData()
+											// this.onLoadedUserData()
 										})
 										.catch(error => {
 											console.error(error)
@@ -382,32 +382,45 @@ class Settings extends BaseComponent {
 
 	onChangeUserData () {
 		if (this.props.isEditingData) {
+			// @ts-ignore
 			this.children.form[0].children.fields.forEach((item:BaseComponent) => {
+				// @ts-ignore
 				item.children.content[1].hide()
+				// @ts-ignore
 				item.children.content[2].show()
 			})
 		} else {
+			// @ts-ignore
 			this.children.form[0].children.fields.forEach((item:BaseComponent) => {
+				// @ts-ignore
 				item.children.content[1].show()
+				// @ts-ignore
 				item.children.content[2].hide()
 			})
 		}
 
+		// @ts-ignore
 		this.children.form[1].hide()
 	}
 
 	onChangeUserPassword () {
 		if (this.props.isEditingPassword) {
+			// @ts-ignore
 			this.children.form[0].hide()
+			// @ts-ignore
 			this.children.form[1].show()
 
+			// @ts-ignore
 			this.children.form[1].children.fields.forEach((item:BaseComponent) => {
 				item.show()
 			})
 		} else {
+			// @ts-ignore
 			this.children.form[0].show()
+			// @ts-ignore
 			this.children.form[1].hide()
 
+			// @ts-ignore
 			this.children.form[1].children.fields.forEach((item:BaseComponent) => {
 				item.hide()
 			})
@@ -415,13 +428,15 @@ class Settings extends BaseComponent {
 	}
 
 	onLoadedUserData () {
-		const state = store.getState()
+		const state:Indexed = store.getState()
 
+		// @ts-ignore
 		this.children.form[0].children.fields.forEach((container:BaseComponent) => {
+			// @ts-ignore
 			container.children.content.forEach((field:BaseComponent, index:number) => {
 				if (!index) return
 
-				field.setProps({ value: (state as Indexed).user[container.props.name] })
+				field.setProps({ value: (state as Indexed<object>).user[container.props.name as keyof typeof state.user] })
 			})
 		})
 	}

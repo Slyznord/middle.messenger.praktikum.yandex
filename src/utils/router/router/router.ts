@@ -1,15 +1,14 @@
 import Route from '../route/route'
-import BaseComponent from '../../block/block'
-import { route } from './types'
+import { Indexed, route } from '../../types'
 
 class Router {
   private static __instance:Router;
   public routes:Route[]
   public history:History
-  private currentRoute:Route | null
+  public currentRoute:Route | null
   private readonly rootQuery:string
 
-  constructor(rootQuery: string, routes:[]) {
+  constructor(rootQuery: string, routes:route[]) {
     if (Router.__instance) {
       return Router.__instance
     }
@@ -24,7 +23,7 @@ class Router {
     this.init(routes)
   }
 
-  public use (pathname:string, block:BaseComponent):this {
+  public use (pathname:string, block:Indexed<unknown>):this {
     const route = new Route(pathname, block, { rootQuery: this.rootQuery })
     this.routes.push(route)
     return this
@@ -51,7 +50,7 @@ class Router {
     this.history.forward()
   }
 
-  private init (routes:{ path:string, component:BaseComponent }[]):void {
+  private init (routes:route[]):void {
     routes.forEach((item:route) => {
       const route = new Route(item.path, item.component, { rootQuery: this.rootQuery })
       this.routes.push(route)

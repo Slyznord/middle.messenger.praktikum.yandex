@@ -13,6 +13,7 @@ import ChatController from '../../controllers/chat.controller'
 import { router } from '../../index'
 import connect from '../../utils/connect'
 import { Indexed } from '../../utils/types'
+import {isEqual} from "../../utils/isEqual";
 
 type message = {
   id: number,
@@ -70,7 +71,7 @@ class Sidebar extends BaseComponent {
               click: () => {
                 if (!this.props.chatName) alert('Название чата не может быть пустым')
 
-                ChatApi.createChat(this.props.chatName)
+                ChatApi.createChat(this.props.chatName as string)
                   .then(() => {
                     this.children.chatParams.hide()
                     this.updateChats()
@@ -100,7 +101,7 @@ class Sidebar extends BaseComponent {
   }
 
   rewriteChats (chats:[]) {
-    this.children.dialogs = chats.map((item:message) => {
+    (this.children.dialogs as unknown as BaseComponent[]) = chats.map((item:message) => {
       let time = undefined
 
       if (item.last_message?.time) {
@@ -117,6 +118,7 @@ class Sidebar extends BaseComponent {
         unread_count: item.unread_count,
         events: {
           click: () => {
+            // @ts-ignore
             this.eventBus().emit('update:chat', item.id)
           }
         }
@@ -136,9 +138,9 @@ class Sidebar extends BaseComponent {
   }
 
   componentDidUpdate(oldProps:Indexed, newProps:Indexed): boolean {
-    if (!newProps?.chats) return true
+    if (!newProps?.chats || isEqual(oldProps, newProps)) return true
 
-    this.rewriteChats(newProps.chats)
+    this.rewriteChats(newProps.chats as [])
 
     return true
   }
@@ -154,4 +156,4 @@ function mapUserToProps(state:Indexed) {
   }
 }
 
-export default connect(Sidebar, mapUserToProps)
+export default connect((Sidebar as typeof BaseComponent), mapUserToProps)

@@ -1,9 +1,10 @@
 import BaseComponent from '../../utils/block/block'
 import template from './container.tmpl'
 import './container.scss'
+import { Indexed } from "../../utils/types";
 
 export default class Container extends BaseComponent {
-	constructor(props:object) {
+	constructor(props:Indexed) {
 		super('div', props)
 	}
 

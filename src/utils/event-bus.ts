@@ -1,13 +1,13 @@
 import { Indexed } from './types'
 
 class EventBus {
-  private readonly listeners:Indexed
+  private readonly listeners:Indexed<Function[]>
 
   constructor() {
     this.listeners = {}
   }
 
-  on (event:string, callback:() => unknown | void):void {
+  on (event:string, callback:() => unknown):void {
     if (!this.listeners[event]) {
       this.listeners[event] = []
     }

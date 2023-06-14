@@ -25,8 +25,13 @@ export default class UserList extends BaseComponent {
       users.forEach((item:HTMLElement) => {
         if (item === null) return
 
-        item.querySelector('.user-list__remove').addEventListener('click', () => {
-          ChatApi.deleteUserFromChat(this.props.chatId, item.getAttribute('data-user-id'))
+        const removeButton:HTMLElement | null = item.querySelector('.user-list__remove') || null
+        const buttonID:string | null | undefined = removeButton?.getAttribute('data-user-id')
+
+        if (!(removeButton && buttonID)) return
+
+        removeButton.addEventListener('click', () => {
+          ChatApi.deleteUserFromChat((this.props.chatId as number), parseInt(buttonID))
             .then((xhr:XMLHttpRequest) => {
               if (!xhr.response) return
               item.remove()

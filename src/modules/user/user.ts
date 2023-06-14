@@ -10,19 +10,17 @@ import { Indexed } from '../../utils/types'
 import connect from '../../utils/connect'
 
 class User extends BaseComponent {
-  constructor(props:object = {}) {
+  constructor(props:Indexed = {}) {
     const input = new Input({
-      type: 'file',
-      name: 'file',
-      wrapperClasses: 'hidden',
       events: {
-        change: (event:Event) => {
+        change: (event: Event) => {
           const { target } = event
+          const files = (target as HTMLInputElement).files
 
-          if (target === null) return
+          if (!files) return
 
-          userController.updateAvatar((target as HTMLInputElement).files[0])
-            .then((xhr:XMLHttpRequest) => {
+          userController.updateAvatar(files[0])
+            .then((xhr: XMLHttpRequest) => {
               const user = JSON.parse(xhr.response)
 
               store.set('user.avatar', user.avatar)
@@ -32,7 +30,10 @@ class User extends BaseComponent {
               console.error(error)
             })
         }
-      }
+      },
+      name: 'file',
+      type: 'file',
+      wrapperClasses: 'hidden'
     })
 
     super('div', {
@@ -52,4 +53,4 @@ function mapUserToProps(state:Indexed) {
   }
 }
 
-export default connect(User, mapUserToProps)
+export default connect((User as typeof BaseComponent), mapUserToProps)
